@@ -41,7 +41,7 @@
 $username = 'pcs7gm'; 
 $password = 'Spring2024';
 $host = 'mysql01.cs.virginia.edu';
-$dbname = 'pcs7gm';
+$dbname = 'pcs7gm_a';
 $dsn = "mysql:host=$host;dbname=$dbname";
 
 ////////////////////////////////////////////
