@@ -38,7 +38,7 @@
 ////////////////////////////////////////////
 
 /** S24, PHP (on GCP, local XAMPP, or CS server) connect to MySQL (on CS server) **/
-$username = 'pcs7gm'; 
+$username = 'pcs7gm_a'; 
 $password = 'Spring2024';
 $host = 'mysql01.cs.virginia.edu';
 $dbname = 'pcs7gm_a';
