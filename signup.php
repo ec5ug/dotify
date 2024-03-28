@@ -1,4 +1,7 @@
 <!-- https://www.sitepoint.com/create-a-php-login-system/ -->
+<?php
+require("import.php");
+?>
 <!DOCTYPE html>
  <html lang="en">
      <head>

@@ -1,7 +1,6 @@
 <!-- https://www.sitepoint.com/create-a-php-login-system/ -->
 <?php
-require("connect-db.php");
-require("request-db.php");
+require("import.php");
 ?>
 <?php
     

@@ -1,3 +1,6 @@
+<?php
+require "import.php";
+?>
 <!DOCTYPE html>
  <html lang="en">
      <head>
@@ -18,7 +21,8 @@
             <nav>
                 <a href="index.php">Home</a>
             </nav>
-            <p>Welcome to Dotify!</p>
+            <p>Welcome to Dotify, <?= $_SESSION["username"] ?>!</p>
         </header>
+        <a href="logout.php">Logout</a>
      </body>
  </html>

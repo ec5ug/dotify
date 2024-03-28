@@ -1,6 +1,5 @@
 <?php
-require("connect-db.php");
-require("request-db.php");
+require("import.php");
 ?>
 <?php
     if (!isset($_POST["login"])){
@@ -20,6 +19,7 @@ require("request-db.php");
         header("Location: index.php?message=incorrectpassword");
         exit();
     }
+    $_SESSION["username"] = $username;
     header("Location: welcome.php");
     exit();
     
