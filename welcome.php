@@ -1,5 +1,6 @@
 <?php
 require "import.php";
+require "logged-in.php";
 ?>
 <!DOCTYPE html>
  <html lang="en">
