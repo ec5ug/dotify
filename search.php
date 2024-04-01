@@ -19,6 +19,7 @@ require "logged-in.php";
 </head>
 <body>
 <header class="container">
+    <?php include 'nav_bar.php'; ?>
     <h1>Search for a Song</h1>
     <a href="welcome.php">Home</a>
     <p></p>
