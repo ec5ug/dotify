@@ -98,7 +98,7 @@ function getUserId($username) {
 
 function createPlaylist($user_id, $playlist_name){
     global $db;
-    $query = "INSERT INTO Playlist (user_id, playlist_name) VALUES (:user_id, :playlist_name)";
+    $query = "CALL createPlaylist (:user_id, :playlist_name)";
     try {
         $statement = $db->prepare($query);
         // fill in the value
@@ -108,8 +108,8 @@ function createPlaylist($user_id, $playlist_name){
         $statement->execute();
         $statement->closeCursor();
     } catch (PDOException $e) {
-        $e->getMessage();
+        echo $e->getMessage();
     } catch (Exception $e) {
-        $e->getMessage();
+        echo $e->getMessage();
     }
 }
