@@ -75,5 +75,41 @@ function searchSongs($str){
     } catch (Exception $e) {
         $e->getMessage();
     }
+}
 
+function getUserId($username) {
+    global $db;
+    $query = "SELECT user_id FROM Dotify_User WHERE username=:username";
+    try {
+        $statement = $db->prepare($query);
+        // fill in the value
+        $statement->bindValue(':username', $username);
+        // execute
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        $e->getMessage();
+    } catch (Exception $e) {
+        $e->getMessage();
+    }
+}
+
+function createPlaylist($user_id, $playlist_name){
+    global $db;
+    $query = "INSERT INTO Playlist (user_id, playlist_name) VALUES (:user_id, :playlist_name)";
+    try {
+        $statement = $db->prepare($query);
+        // fill in the value
+        $statement->bindValue(':user_id', $user_id[0]['user_id']); // Extract user_id from result
+        $statement->bindValue(':playlist_name', $playlist_name);
+        // execute
+        $statement->execute();
+        $statement->closeCursor();
+    } catch (PDOException $e) {
+        $e->getMessage();
+    } catch (Exception $e) {
+        $e->getMessage();
+    }
 }

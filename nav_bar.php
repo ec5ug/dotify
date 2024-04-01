@@ -33,7 +33,7 @@
     <ul>
         <li><a href="./welcome.php">Home</a></li>
         <li><a href="./search.php">Find a Song</a></li>
-        <li><a href=#>Playlists</a></li>
+        <li><a href="./playlist.php">Playlists</a></li>
         <li><a href=#>Reccomendations</a></li>
         <li><a href=#>Your Groups</a></li>
         <li><a href="./logout.php">Logout</a></li>
