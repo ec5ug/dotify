@@ -5,8 +5,7 @@ require "logged-in.php";
 if(isset($_POST["submit"])){
     $username = $_SESSION["username"];
     $playlist_name = $_POST["playlist_name"];
-    $user_id = getUserId($username); // Get user_id
-    createPlaylist($user_id, $playlist_name);
+    createPlaylist($username, $playlist_name);
     header("Location: playlist.php");
     exit();
 }

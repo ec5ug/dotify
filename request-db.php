@@ -96,10 +96,11 @@ function getUserId($username) {
     }
 }
 
-function createPlaylist($user_id, $playlist_name){
+function createPlaylist($username, $playlist_name){
     global $db;
     $query = "CALL createPlaylist (:user_id, :playlist_name)";
     try {
+        $user_id = getUserId($username); // Get user_id
         $statement = $db->prepare($query);
         // fill in the value
         $statement->bindValue(':user_id', $user_id[0]['user_id']); // Extract user_id from result
