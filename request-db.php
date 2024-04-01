@@ -113,3 +113,26 @@ function createPlaylist($user_id, $playlist_name){
         echo $e->getMessage();
     }
 }
+
+function getPlaylist($user_id) {
+    global $db;
+    $query = "SELECT * FROM Playlist WHERE user_id=:user_id";
+    try {
+        if (is_array($user_id)) {
+            $user_id = $user_id[0]['user_id'];
+        }
+        
+        $statement = $db->prepare($query);
+        $statement->bindValue(':user_id', $user_id);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}

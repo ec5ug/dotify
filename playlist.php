@@ -81,6 +81,25 @@ if(isset($_POST["submit"])){
         </div>
     </div>
 
+    <?php
+    $username = $_SESSION["username"];
+    $user_id = getUserId($username);
+    if ($user_id !== false && isset($user_id[0]['user_id'])) {
+        $user_playlists = getPlaylist($user_id[0]['user_id']);
+        if (!empty($user_playlists)) {
+            echo "<ul>";
+            foreach ($user_playlists as $playlist) {
+                echo "<li>" . $playlist['playlist_name'] . "</li>";
+            }
+            echo "</ul>";
+        } else {
+            echo "<p>No playlists found.</p>";
+        }
+    } else {
+        echo "<p>Error retrieving user ID.</p>";
+    }
+    ?>
+
     <script>
         function toggleForm() {
             var form = document.getElementById('create_playlist_form');
