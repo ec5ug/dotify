@@ -115,7 +115,8 @@ function createPlaylist($username, $playlist_name){
     }
 }
 
-function getPlaylist($user_id) {
+function getPlaylist($username) {
+    $user_id = getUserId($username);
     global $db;
     $query = "SELECT * FROM Playlist WHERE user_id=:user_id";
     try {

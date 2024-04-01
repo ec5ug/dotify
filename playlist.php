@@ -9,6 +9,9 @@ if(isset($_POST["submit"])){
     header("Location: playlist.php");
     exit();
 }
+
+$username = $_SESSION["username"];
+$user_playlists = getPlaylist($username);
 ?>
 
 <!DOCTYPE html>
@@ -81,21 +84,14 @@ if(isset($_POST["submit"])){
     </div>
 
     <?php
-    $username = $_SESSION["username"];
-    $user_id = getUserId($username);
-    if ($user_id !== false && isset($user_id[0]['user_id'])) {
-        $user_playlists = getPlaylist($user_id[0]['user_id']);
-        if (!empty($user_playlists)) {
-            echo "<ul>";
-            foreach ($user_playlists as $playlist) {
-                echo "<li>" . $playlist['playlist_name'] . "</li>";
-            }
-            echo "</ul>";
-        } else {
-            echo "<p>No playlists found.</p>";
+    if (!empty($user_playlists)) {
+        echo "<ul>";
+        foreach ($user_playlists as $playlist) {
+            echo "<li>" . $playlist['playlist_name'] . "</li>";
         }
+        echo "</ul>";
     } else {
-        echo "<p>Error retrieving user ID.</p>";
+        echo "<p>No playlists found.</p>";
     }
     ?>
 
