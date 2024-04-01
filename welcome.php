@@ -24,6 +24,8 @@ require "logged-in.php";
             </nav>
             <p>Welcome to Dotify, <?= $_SESSION["username"] ?>!</p>
         </header>
+        <a href="search.php">Search</a>
+        <p></p>
         <a href="logout.php">Logout</a>
      </body>
  </html>

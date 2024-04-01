@@ -54,3 +54,26 @@ function getUserHash($username) {
         $e->getMessage();
     }
 }
+
+function searchSongs($str){
+    global $db;
+    $query = "SELECT * FROM Song NATURAL JOIN Song_Artist WHERE LOWER(artist_name) LIKE CONCAT('%', LOWER(:str), '%') 
+    OR LOWER(track_name) LIKE CONCAT('%', LOWER(:str), '%') 
+    OR LOWER(released_year) LIKE CONCAT('%', LOWER(:str), '%')";
+    //Case-insensitive + "contains" match (search "Eve" should match with "Eve" "Evening" "even", etc.)
+    try {
+        $statement = $db->prepare($query);
+        // fill in the value
+        $statement->bindValue(':str', $str);
+        // execute
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        $e->getMessage();
+    } catch (Exception $e) {
+        $e->getMessage();
+    }
+
+}
