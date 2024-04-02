@@ -2,10 +2,15 @@
 require "import.php";
 require "logged-in.php";
 
-if(isset($_POST["submit"])){
+if(isset($_POST["create_playlist"])){
     $username = $_SESSION["username"];
     $playlist_name = $_POST["playlist_name"];
     createPlaylist($username, $playlist_name);
+    header("Location: playlist.php");
+    exit();
+} else if (isset($_POST["delete_playlist"])) {
+    $playlist_id = $_POST['playlist_id'];
+    deletePlaylist($playlist_id);
     header("Location: playlist.php");
     exit();
 }
@@ -78,21 +83,33 @@ $user_playlists = getPlaylist($username);
             <form method="post" id="create_playlist_form">
                 <label for="playlist_name">Playlist Name:</label>
                 <input type="text" id="playlist_name" name="playlist_name" required><br><br>
-                <input type="submit" name="submit" value="Submit">
+                <input type="submit" name="create_playlist" value="Submit">
             </form>
         </div>
     </div>
 
     <?php
     if (!empty($user_playlists)) {
-        echo "<ul>";
+        echo "<table>";
         foreach ($user_playlists as $playlist) {
-            echo "<li>" . $playlist['playlist_name'] . "</li>";
+            echo "<tr>";
+            echo "<td>" . $playlist['playlist_name'] . "</td>";
+            echo "<td>";
+            echo "<form method='post'>";
+            echo "<input type='hidden' name='playlist_id' value='" . $playlist['playlist_id'] . "'>";
+            echo "<button type='submit' name='delete_playlist'>Delete Playlist</button>";
+            echo "</form>";
+            echo "</td>";
+            echo "</tr>";
         }
-        echo "</ul>";
+        echo "</table>";
     } else {
         echo "<p>No playlists found.</p>";
     }
+    // var_dump($user_playlists);
+    // $user_access = get_access($username);
+    // echo "\n";
+    // var_dump($user_access);
     ?>
 
     <script>

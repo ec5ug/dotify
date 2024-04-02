@@ -105,8 +105,48 @@ function createPlaylist($username, $playlist_name){
         // fill in the value
         $statement->bindValue(':user_id', $user_id[0]['user_id']); // Extract user_id from result
         $statement->bindValue(':playlist_name', $playlist_name);
-        // execute
+        // execute the stored procedure
         $statement->execute();
+        $statement->closeCursor();
+    } catch (PDOException $e) {
+        echo "PDO Exception: " . $e->getMessage();
+    } catch (Exception $e) {
+        echo "Exception: " . $e->getMessage();
+    }
+}
+
+function getPlaylist($username) {
+    global $db;
+    $user_id = getUserId($username);
+    $query = "SELECT * FROM Playlist WHERE user_id=:user_id";
+    try {
+        if (is_array($user_id)) {
+            $user_id = $user_id[0]['user_id'];
+        }
+        
+        $statement = $db->prepare($query);
+        $statement->bindValue(':user_id', $user_id);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}
+
+function deletePlaylist($playlist_id){
+    global $db;
+    $query = "DELETE FROM Playlist WHERE playlist_id=:playlist_id";
+    try {        
+        $statement = $db->prepare($query);
+        $statement->bindValue(':playlist_id', $playlist_id);
+        $statement->execute();
+        $result = $statement->fetchAll();
         $statement->closeCursor();
     } catch (PDOException $e) {
         echo $e->getMessage();
@@ -115,10 +155,10 @@ function createPlaylist($username, $playlist_name){
     }
 }
 
-function getPlaylist($username) {
-    $user_id = getUserId($username);
+function get_access($username) {
     global $db;
-    $query = "SELECT * FROM Playlist WHERE user_id=:user_id";
+    $user_id = getUserId($username);
+    $query = "SELECT * FROM Has_Individual_Access WHERE user_id=:user_id";
     try {
         if (is_array($user_id)) {
             $user_id = $user_id[0]['user_id'];
