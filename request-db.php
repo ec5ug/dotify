@@ -80,7 +80,7 @@ function getUserHash($username) {
 function searchSongs($str){
     global $db;
     $query = "SELECT * FROM Song NATURAL JOIN Song_Artist WHERE LOWER(artist_name) LIKE CONCAT('%', LOWER(:str), '%') 
-    OR LOWER(track_name) LIKE CONCAT('%', LOWER(:str), '%')";
+    OR LOWER(track_name) LIKE CONCAT('%', LOWER(:str), '%') OR LOWER(released_year) LIKE CONCAT('%', LOWER(:str), '%')";
     //Case-insensitive + "contains" match (search "Eve" should match with "Eve" "Evening" "even", etc.)
     try {
         $statement = $db->prepare($query);
