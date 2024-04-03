@@ -46,30 +46,26 @@ if (!empty($songs_found)) {
     echo "</tr>";
     echo "</thead>";
     
-    // Initialize an array to keep track of displayed track names
     $displayed_track_names = [];
     
     foreach ($songs_found as $song_found) {
-        // Check if the track name has been displayed already
         if (!in_array($song_found['track_name'], $displayed_track_names)) {
             echo "<tr>";
             echo "<td>" . $song_found['track_name'] . "</td>";
             echo "<td>" . $song_found['released_year'] . "</td>";
             echo "<td>";
             
-            // Concatenate artist names for tracks with the same name
             $artist_names = [];
             foreach ($songs_found as $song) {
                 if ($song['track_name'] == $song_found['track_name']) {
                     $artist_names[] = $song['artist_name'];
                 }
             }
-            echo implode(", ", array_unique($artist_names)); // Display unique artist names
+            echo implode(", ", array_unique($artist_names));
             
             echo "</td>";
             echo "</tr>";
             
-            // Add the displayed track name to the array
             $displayed_track_names[] = $song_found['track_name'];
         }
     }
