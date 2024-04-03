@@ -1,3 +1,4 @@
+<!-- https://www.w3schools.com/howto/howto_js_popup_form.asp -->
 <?php
 require "import.php";
 require "logged-in.php";
@@ -66,11 +67,6 @@ $user_playlists = getPlaylist($username);
             border-radius: 4px;
             box-sizing: border-box;
         }
-
-        /* Show the dropdown content (the form) when the button is clicked */
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
     </style>
 </head>
 
@@ -78,12 +74,13 @@ $user_playlists = getPlaylist($username);
     <?php include 'nav_bar.php'; ?>
     
     <div class="dropdown">
-        <button>Create Playlist</button>
-        <div class="dropdown-content">
+        <button onclick=openForm()>Create Playlist</button>
+        <div class="dropdown-content" id="dropdown-content">
             <form method="post" id="create_playlist_form">
                 <label for="playlist_name">Playlist Name:</label>
                 <input type="text" id="playlist_name" name="playlist_name" required><br><br>
                 <input type="submit" name="create_playlist" value="Submit">
+                <button onclick=closeForm()>Close</button>
             </form>
         </div>
     </div>
@@ -113,9 +110,11 @@ $user_playlists = getPlaylist($username);
     ?>
 
     <script>
-        function toggleForm() {
-            var form = document.getElementById('create_playlist_form');
-            form.classList.toggle('hidden');
+        function openForm() {
+            document.getElementById("dropdown-content").style.display = "block";
+        }
+        function closeForm() {
+            document.getElementById("dropdown-content").style.display = "none";
         }
     </script>
 </body>
