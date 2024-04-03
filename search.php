@@ -44,6 +44,7 @@ if (!empty($songs_found)) {
     echo "<th><b>Release Year</b></th>";
     echo "<th><b>Artist</b></th>";
     echo "<th></th>";
+    echo "<th></th>";
     echo "</tr>";
     echo "</thead>";
     
@@ -66,6 +67,7 @@ if (!empty($songs_found)) {
             
             echo "</td>";
             echo "<td><button type='submit' name='add_to_playlist'>Add to Playlist</button>";
+            echo "<td><button type='submit' name='add_to_playlist'>Add to Favorites</button>";
             echo "</tr>";
             
             $displayed_track_names[] = $song_found['track_name'];
