@@ -2,9 +2,13 @@
 require "import.php";
 require "logged-in.php";
 
-if(isset($_POST["submit"])){
+$username = $_SESSION["username"];
+if(isset($_POST["search-submit"])){
     $str = $_POST["search"];
     $songs_found = searchSongs($str);
+} else if (isset($_POST['favorite-submit'])) {
+    $song_id = $_POST["song_id"];
+    addToFavorites($user_id, $song_id);
 }
 ?>
 
@@ -24,12 +28,11 @@ if(isset($_POST["submit"])){
 <header class="container">
     <?php include 'nav_bar.php'; ?>
     <h1>Search for a Song</h1>
-    <a href="welcome.php">Home</a>
     <p></p>
     <form method="post">
         <label>Search</label>
         <input type="text" name="search" style="width: 300px;" placeholder="Search by title, artist, or release year" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search for a song by title, artist, or release year'">
-        <input type="submit" name="submit">
+        <input type="submit" name="search-submit">
     </form>
 </header>
 
@@ -67,7 +70,8 @@ if (!empty($songs_found)) {
             
             echo "</td>";
             echo "<td><button type='submit' name='add_to_playlist'>Add to Playlist</button>";
-            echo "<td><button type='submit' name='add_to_playlist'>Add to Favorites</button>";
+            echo "<input type='hidden' name='playlist_id' value='" . $song_found['song_id'] . "'>";
+            echo "<td><button type='submit' name='favorite-submit'>Add to Favorites</button>";
             echo "</tr>";
             
             $displayed_track_names[] = $song_found['track_name'];

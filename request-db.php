@@ -115,7 +115,7 @@ function getUserId($username) {
         $statement->execute();
         $result = $statement->fetchAll();
         $statement->closeCursor();
-        return $result;
+        return $result[0]['user_id'];
     } catch (PDOException $e) {
         $e->getMessage();
     } catch (Exception $e) {
@@ -130,7 +130,7 @@ function createPlaylist($username, $playlist_name){
         $user_id = getUserId($username); // Get user_id
         $statement = $db->prepare($query);
         // fill in the value
-        $statement->bindValue(':user_id', $user_id[0]['user_id']); // Extract user_id from result
+        $statement->bindValue(':user_id', $user_id); // Extract user_id from result
         $statement->bindValue(':playlist_name', $playlist_name);
         // execute the stored procedure
         $statement->execute();
@@ -147,10 +147,6 @@ function getPlaylist($username) {
     $user_id = getUserId($username);
     $query = "SELECT * FROM Playlist WHERE user_id=:user_id";
     try {
-        if (is_array($user_id)) {
-            $user_id = $user_id[0]['user_id'];
-        }
-        
         $statement = $db->prepare($query);
         $statement->bindValue(':user_id', $user_id);
         $statement->execute();
@@ -182,15 +178,22 @@ function deletePlaylist($playlist_id){
     }
 }
 
+function inFavorites($user_id, $song_id) {
+    global $db;
+    $user_id = getUserId($username);
+    $query = "SELECT * FROM Favorites WHERE $user_id=:user_id AND $song_id=:song_id";
+
+}
+
+function addToFavorites($user_id, $song_id) {
+
+}
+
 function get_access($username) {
     global $db;
     $user_id = getUserId($username);
     $query = "SELECT * FROM Has_Individual_Access WHERE user_id=:user_id";
     try {
-        if (is_array($user_id)) {
-            $user_id = $user_id[0]['user_id'];
-        }
-        
         $statement = $db->prepare($query);
         $statement->bindValue(':user_id', $user_id);
         $statement->execute();

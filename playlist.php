@@ -3,8 +3,8 @@
 require "import.php";
 require "logged-in.php";
 
+$username = $_SESSION["username"];
 if(isset($_POST["create_playlist"])){
-    $username = $_SESSION["username"];
     $playlist_name = $_POST["playlist_name"];
     createPlaylist($username, $playlist_name);
     header("Location: playlist.php");
@@ -16,7 +16,6 @@ if(isset($_POST["create_playlist"])){
     exit();
 }
 
-$username = $_SESSION["username"];
 $user_playlists = getPlaylist($username);
 ?>
 
