@@ -103,6 +103,13 @@ function getUserId($username) {
 
 function createPlaylist($username, $playlist_name){
     global $db;
+    $existing_playlists = getPlaylist($username);
+    foreach ($existing_playlists as $playlist) {
+        if ($playlist['playlist_name'] == $playlist_name) {
+            echo "A playlist with that name already exists!";
+            return False;
+        }
+    }
     $query = "CALL createPlaylist (:user_id, :playlist_name)";
     try {
         $user_id = getUserId($username); // Get user_id

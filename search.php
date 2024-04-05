@@ -42,6 +42,7 @@ if(isset($_POST["search-submit"])){
         <input type="submit" name="search-submit">
     </form>
     <style>
+        /* Styling generated from ChatGPT */
         /* Tooltip container */
         .tooltip {
             position: relative;
