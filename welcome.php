@@ -17,13 +17,10 @@ require "logged-in.php";
          <title>Dotify</title>
      </head>  
      <body>
+        <?php include 'nav_bar.php'; ?>
         <header class="container">
             <h1>Dotify</h1>
-            <nav>
-                <a href="index.php">Home</a>
-            </nav>
             <p>Welcome to Dotify, <?= $_SESSION["username"] ?>!</p>
         </header>
-        <a href="logout.php">Logout</a>
      </body>
  </html>
