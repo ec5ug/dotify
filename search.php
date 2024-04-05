@@ -16,6 +16,9 @@ if(isset($_POST["search-submit"])){
     removeFromFavorites($username, $song_id);
     header('Location: ' . $_SERVER['REQUEST_URI']);
     exit();
+} else if (isset($_POST['add-playlist'])){
+    $song_id = $_POST["song_id"];
+    header("Location: addsong.php?song=$song_id");
 }
 ?>
 
@@ -121,17 +124,16 @@ if (!empty($songs_found)) {
             echo "</td>";
             echo "<td>";
             echo "<form method='post'>";
+            echo "<input type='hidden' name='song_id' value='" . $song_found['song_id'] . "'>";
             if (inFavorites($username, $song_found['song_id'])) {
-                echo "<input type='hidden' name='song_id' value='" . $song_found['song_id'] . "'>";
                 echo "<button type='submit' name='favorite-remove'>Remove from Favorites</button>";
             } else {
-                echo "<input type='hidden' name='song_id' value='" . $song_found['song_id'] . "'>";
                 echo "<button type='submit' name='favorite-create'>Add to Favorites</button>";
             }
             echo "</td>";
             echo "<td>";
             if (getPlaylist($username)){
-                echo "<button type='submit' name='#'>Add to Playlist</button>";
+                echo "<button type='submit' name='add-playlist'>Add to Playlist</button>";
             }
             else{
                 echo "<div class='tooltip'>";
