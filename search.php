@@ -8,7 +8,9 @@ if(isset($_POST["search-submit"])){
     $songs_found = searchSongs($str);
 } else if (isset($_POST['favorite-submit'])) {
     $song_id = $_POST["song_id"];
-    addToFavorites($user_id, $song_id);
+    addToFavorites($username, $song_id);
+    header('Location: ' . $_SERVER['REQUEST_URI']);
+    exit();
 }
 ?>
 
@@ -69,9 +71,12 @@ if (!empty($songs_found)) {
             echo implode(", ", array_unique($artist_names));
             
             echo "</td>";
-            echo "<td><button type='submit' name='add_to_playlist'>Add to Playlist</button>";
-            echo "<input type='hidden' name='playlist_id' value='" . $song_found['song_id'] . "'>";
-            echo "<td><button type='submit' name='favorite-submit'>Add to Favorites</button>";
+            echo "<td>";
+            echo "<form method='post'>";
+            echo "<input type='hidden' name='song_id' value='" . $song_found['song_id'] . "'>";
+            echo "<button type='submit' name='favorite-submit'>Add to Favorites</button>";
+            echo "</form>";
+            echo "</td>";
             echo "</tr>";
             
             $displayed_track_names[] = $song_found['track_name'];
