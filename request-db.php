@@ -226,11 +226,13 @@ function removeFromFavorites($username, $song_id) {
     }
 }
 
-function getFavorites(){
+function getFavorites($username){
     global $db;
-    $query = "SELECT * FROM Favorites";
+    $user_id = getUserId($username);
+    $query = "SELECT * FROM Favorites NATURAL JOIN Song NATURAL JOIN Song_Artist WHERE user_id=:user_id";
     try {
         $statement = $db->prepare($query);
+        $statement->bindValue(':user_id', $user_id);
         $statement->execute();
         $result = $statement->fetchAll();
         $statement->closeCursor();
