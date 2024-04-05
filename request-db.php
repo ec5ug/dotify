@@ -272,3 +272,110 @@ function get_access($username) {
         return false;
     }
 }
+
+function getPlaylistsWithSong($username, $song_id){
+    global $db;
+    $user_id = getUserId($username);
+    $query = "SELECT DISTINCT playlist_id
+                FROM 
+                    (SELECT * FROM Playlist WHERE user_id=:user_id) AS PlaylistsWithSong 
+                    NATURAL JOIN Listed_In
+                WHERE song_id=:song_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':user_id', $user_id);
+        $statement->bindValue(':song_id', $song_id);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}
+
+function getSongName($song_id){
+    global $db;
+    $query = "SELECT track_name
+                FROM Song
+                WHERE song_id=:song_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':song_id', $song_id);
+        $statement->execute();
+        $result = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
+        $statement->closeCursor();
+        return $result[0];
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}
+
+function addSongToPlaylist($song_id, $playlist_id){
+    global $db;
+    $query = "INSERT INTO Listed_In (playlist_id, song_id) VALUES (:playlist_id, :song_id)";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':playlist_id', $playlist_id);
+        $statement->bindValue(':song_id', $song_id);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}
+
+function removeSongFromPlaylist($song_id, $playlist_id){
+    global $db;
+    $query = "DELETE FROM Listed_In WHERE playlist_id=:playlist_id AND song_id=:song_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':playlist_id', $playlist_id);
+        $statement->bindValue(':song_id', $song_id);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}
+
+//returns if the song_id, playlist_id 
+function listedItemInPlaylisting($song_id, $playlist_id){
+    global $db;
+    $query = "SELECT * FROM Listed_In WHERE playlist_id=:playlist_id AND song_id=:song_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':playlist_id', $playlist_id);
+        $statement->bindValue(':song_id', $song_id);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return empty($result);
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}
