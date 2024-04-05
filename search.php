@@ -6,9 +6,14 @@ $username = $_SESSION["username"];
 if(isset($_POST["search-submit"])){
     $str = $_POST["search"];
     $songs_found = searchSongs($str);
-} else if (isset($_POST['favorite-submit'])) {
+} else if (isset($_POST['favorite-create'])) {
     $song_id = $_POST["song_id"];
     addToFavorites($username, $song_id);
+    header('Location: ' . $_SERVER['REQUEST_URI']);
+    exit();
+} else if (isset($_POST['favorite-remove'])) {
+    $song_id = $_POST["song_id"];
+    removeFromFavorites($username, $song_id);
     header('Location: ' . $_SERVER['REQUEST_URI']);
     exit();
 }
@@ -73,8 +78,13 @@ if (!empty($songs_found)) {
             echo "</td>";
             echo "<td>";
             echo "<form method='post'>";
-            echo "<input type='hidden' name='song_id' value='" . $song_found['song_id'] . "'>";
-            echo "<button type='submit' name='favorite-submit'>Add to Favorites</button>";
+            if (inFavorites($username, $song_found['song_id'])) {
+                echo "<input type='hidden' name='song_id' value='" . $song_found['song_id'] . "'>";
+                echo "<button type='submit' name='favorite-remove'>Remove from Favorites</button>";
+            } else {
+                echo "<input type='hidden' name='song_id' value='" . $song_found['song_id'] . "'>";
+                echo "<button type='submit' name='favorite-create'>Add to Favorites</button>";
+            }
             echo "</form>";
             echo "</td>";
             echo "</tr>";

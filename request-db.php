@@ -156,8 +156,9 @@ function deletePlaylist($playlist_id){
     }
 }
 
-function inFavorites($user_id, $song_id) {
+function inFavorites($username, $song_id) {
     global $db;
+    $user_id = getUserId($username);
     $query = "SELECT * FROM Favorites WHERE user_id=:user_id AND song_id=:song_id";
     try {
         $statement = $db->prepare($query);
@@ -184,7 +185,7 @@ function addToFavorites($username, $song_id) {
     global $db;
     $user_id = getUserId($username);
     try {
-        if (!inFavorites($user_id, $song_id)) {
+        if (!inFavorites($username, $song_id)) {
             $query = "INSERT INTO Favorites(user_id, song_id) VALUES(:user_id, :song_id)";
             $statement = $db->prepare($query);
             $statement->bindValue(':user_id', $user_id);
@@ -194,6 +195,27 @@ function addToFavorites($username, $song_id) {
             return true;
         } else {
             return false; // Song already in favorites
+        }
+    } catch (PDOException $e) {
+        error_log("PDOException in addToFavorites: " . $e->getMessage());
+        return false;
+    } catch (Exception $e) {
+        error_log("Exception in addToFavorites: " . $e->getMessage());
+        return false;
+    }
+}
+
+function removeFromFavorites($username, $song_id) {
+    global $db;
+    $user_id = getUserId($username);
+    try {
+        if (inFavorites($username, $song_id)) {
+            $query = "DELETE FROM Favorites WHERE user_id=:user_id AND song_id=:song_id";
+            $statement = $db->prepare($query);
+            $statement->bindValue(':user_id', $user_id);
+            $statement->bindValue(':song_id', $song_id);
+            $statement->execute();
+            $statement->closeCursor();
         }
     } catch (PDOException $e) {
         error_log("PDOException in addToFavorites: " . $e->getMessage());
