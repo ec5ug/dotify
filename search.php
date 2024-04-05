@@ -94,7 +94,7 @@ if (!empty($songs_found)) {
     }
     echo "</table>";
     echo "</div>";
-} else if (isset($_POST["submit"])) {
+} else if (isset($_POST["search-submit"]) && !empty($_POST["search"])) {
     echo "<p>No songs found.</p>";
 }
 ?>
