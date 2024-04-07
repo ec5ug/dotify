@@ -122,6 +122,8 @@ $user_playlists = getPlaylist($username);
                     echo "</td>";
                     echo "</tr>";
                 }
+                // Insert an empty row for space between playlists
+                echo "<tr><td colspan='2'>&nbsp;</td></tr>";
             }
         }
         echo "</table>";
