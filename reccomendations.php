@@ -38,6 +38,7 @@ $recommended_songs_by_artists = reccomendSongsByArtists($username);
             }
             echo "</table>";
             echo "<h2>Songs sung with similar energy levels</h2>";
+            var_dump(calculate_average_energy($username));
         }
         ?>
      </body>

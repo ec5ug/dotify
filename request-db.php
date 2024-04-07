@@ -690,3 +690,16 @@ function reccomendSongsByArtists($username) {
 // ======================================================
 // reccomend songs by valence
 // ======================================================
+function calculate_average_energy($username) {
+    global $db;
+
+    $favorite_songs = getFavorites($username);
+    $playlist_songs = getSongsInUserPlaylist($username);
+    
+    $favorite_energies = array_column($favorite_songs, 'energy');
+    $playlist_energies = array_column($playlist_songs, 'energy');
+
+    $combined_energies = array_merge($favorite_energies, $playlist_energies);
+    $average_energy = count($combined_energies) > 0 ? array_sum($combined_energies) / count($combined_energies) : 0;
+    return $average_energy;
+}
