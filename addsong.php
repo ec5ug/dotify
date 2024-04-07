@@ -12,9 +12,12 @@ require "logged-in.php";
             if($empty)
                 addSongToPlaylist($song_id, intval($playlist_id));
         }
+        header("Location: playlist.php");
+        exit();
     }
     if(!isset($_GET["song"])){
         header("Location: search.php");
+        exit();
     }
     $username = $_SESSION["username"];
     $song_id = $_GET["song"];
