@@ -389,3 +389,21 @@ function getSongsInPlaylist($playlist_id) {
         echo $e->getMessage();
     }
 }
+
+function deleteSongFromPlaylist($playlist_id, $song_id) {
+    global $db;
+    $query = "DELETE FROM Listed_In WHERE playlist_id=:playlist_id AND song_id=:song_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':playlist_id', $playlist_id);
+        $statement->bindValue(':song_id', $song_id);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    } catch (Exception $e) {
+        echo $e->getMessage();
+    }
+}

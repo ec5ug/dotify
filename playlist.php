@@ -14,6 +14,12 @@ if(isset($_POST["create_playlist"])){
     deletePlaylist($playlist_id);
     header("Location: playlist.php");
     exit();
+} else if (isset($_POST["delete_song_from_playlist"])) {
+    $playlist_id = $_POST['playlist_id'];
+    $song_id = $_POST['song_id'];
+    deleteSongFromPlaylist($playlist_id, $song_id);
+    header("Location: playlist.php");
+    exit();
 }
 
 $user_playlists = getPlaylist($username);
