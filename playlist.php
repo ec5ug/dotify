@@ -103,12 +103,19 @@ $user_playlists = getPlaylist($username);
             // List songs under each playlist
             $songs_in_playlist = getSongsInPlaylist($playlist['playlist_id']);
             if (!empty($songs_in_playlist)) {
-                echo "<tr><td colspan='2'><ul>"; // Colspan to span across both columns
                 foreach ($songs_in_playlist as $song_in_playlist) {
+                    echo "<tr>";
                     $song_id = $song_in_playlist['song_id'];
-                    echo "<li>" . getSongName($song_id) . "</li>";
+                    echo "<td>&nbsp;&nbsp;&nbsp;&nbsp;" . getSongName($song_id) . "</td>"; // Indentation
+                    echo "<td>";
+                    echo "<form method='post'>";
+                    echo "<input type='hidden' name='playlist_id' value='" . $playlist['playlist_id'] . "'>";
+                    echo "<input type='hidden' name='song_id' value='" . $song_in_playlist['song_id'] . "'>";
+                    echo "<button type='submit' name='delete_song_from_playlist'>Delete from Playlist</button>";
+                    echo "</form>";
+                    echo "</td>";
+                    echo "</tr>";
                 }
-                echo "</ul></td></tr>";
             }
         }
         echo "</table>";
@@ -116,7 +123,6 @@ $user_playlists = getPlaylist($username);
         echo "<p>No playlists found.</p>";
     }
     ?>
-
 
     <script>
         function openForm() {
