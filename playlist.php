@@ -89,7 +89,9 @@ $user_playlists = getPlaylist($username);
         echo "<table>";
         foreach ($user_playlists as $playlist) {
             echo "<tr>";
-            echo "<td>" . $playlist['playlist_name'] . "</td>";
+            echo "<td>";
+            echo $playlist['playlist_name'];
+            echo "</td>";
             echo "<td>";
             echo "<form method='post'>";
             echo "<input type='hidden' name='playlist_id' value='" . $playlist['playlist_id'] . "'>";
@@ -97,16 +99,24 @@ $user_playlists = getPlaylist($username);
             echo "</form>";
             echo "</td>";
             echo "</tr>";
+
+            // List songs under each playlist
+            $songs_in_playlist = getSongsInPlaylist($playlist['playlist_id']);
+            if (!empty($songs_in_playlist)) {
+                echo "<tr><td colspan='2'><ul>"; // Colspan to span across both columns
+                foreach ($songs_in_playlist as $song_in_playlist) {
+                    $song_id = $song_in_playlist['song_id'];
+                    echo "<li>" . getSongName($song_id) . "</li>";
+                }
+                echo "</ul></td></tr>";
+            }
         }
         echo "</table>";
     } else {
         echo "<p>No playlists found.</p>";
     }
-    // var_dump($user_playlists);
-    // $user_access = get_access($username);
-    // echo "\n";
-    // var_dump($user_access);
     ?>
+
 
     <script>
         function openForm() {

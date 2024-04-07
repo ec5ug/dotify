@@ -372,3 +372,20 @@ function listedItemInPlaylisting($song_id, $playlist_id){
         return false;
     }
 }
+
+function getSongsInPlaylist($playlist_id) {
+    global $db;
+    $query = "SELECT * FROM Listed_In WHERE playlist_id=:playlist_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':playlist_id', $playlist_id);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    } catch (Exception $e) {
+        echo $e->getMessage();
+    }
+}
