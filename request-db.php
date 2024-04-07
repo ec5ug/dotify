@@ -674,8 +674,8 @@ function reccomendSongsByArtists($username) {
     try {
         $statement = $db->query($query);
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-        // shuffle($result);
-        // $result = array_slice($result, 0, 10);
+        shuffle($result);
+        $result = array_slice($result, 0, 10);
 
         return $result;
     } catch (PDOException $e) {
