@@ -1,4 +1,65 @@
 <?php
+// ======================================================
+// accessing user information
+// ======================================================
+function getUsers() {
+    global $db;
+    $query = "SELECT * FROM Dotify_User";
+
+    try {
+        $statement = $db->prepare($query); // compile. does not do anything
+        $statement->execute();
+        $result = $statement->fetchAll(); // saving to a variable
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        $e->getMessage();
+    } catch (Exception $e) {
+        $e->getMessage();
+    }
+}
+
+function getUserHash($username) {
+    global $db;
+    $query = "SELECT * FROM Dotify_User WHERE username=:username";
+    try {
+        $statement = $db->prepare($query);
+        // fill in the value
+        $statement->bindValue(':username', $username);
+        // execute
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        $e->getMessage();
+    } catch (Exception $e) {
+        $e->getMessage();
+    }
+}
+
+function getUserId($username) {
+    global $db;
+    $query = "SELECT user_id FROM Dotify_User WHERE username=:username";
+    try {
+        $statement = $db->prepare($query);
+        // fill in the value
+        $statement->bindValue(':username', $username);
+        // execute
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result[0]['user_id'];
+    } catch (PDOException $e) {
+        $e->getMessage();
+    } catch (Exception $e) {
+        $e->getMessage();
+    }
+}
+
+// ======================================================
+// login/signup
+// ======================================================
 function createAccount($username, $hash_password, $dob) {
     global $db;
     $query = "INSERT INTO Dotify_User(username, hash_password, date_of_birth) 
@@ -20,41 +81,9 @@ function createAccount($username, $hash_password, $dob) {
     }
 }
 
-function getUsers() {
-    global $db;
-    $query = "SELECT * FROM Dotify_User";
-
-    try {
-        $statement = $db->prepare($query); // compile. does not do anything
-        $statement->execute();
-        $result = $statement->fetchAll(); // saving to a variable
-        $statement->closeCursor();
-        return $result;
-    } catch (PDOException $e) {
-        $e->getMessage();
-    } catch (Exception $e) {
-        $e->getMessage();
-    }
-}
-function getUserHash($username) {
-    global $db;
-    $query = "SELECT * FROM Dotify_User WHERE username=:username";
-    try {
-        $statement = $db->prepare($query);
-        // fill in the value
-        $statement->bindValue(':username', $username);
-        // execute
-        $statement->execute();
-        $result = $statement->fetchAll();
-        $statement->closeCursor();
-        return $result;
-    } catch (PDOException $e) {
-        $e->getMessage();
-    } catch (Exception $e) {
-        $e->getMessage();
-    }
-}
-
+// ======================================================
+// Song
+// ======================================================
 function searchSongs($str){
     global $db;
     $query = "SELECT * FROM Song NATURAL JOIN Song_Artist WHERE LOWER(artist_name) LIKE CONCAT('%', LOWER(:str), '%') 
@@ -82,25 +111,30 @@ function searchSongs($str){
     }
 }
 
-function getUserId($username) {
+function getSongName($song_id){
     global $db;
-    $query = "SELECT user_id FROM Dotify_User WHERE username=:username";
+    $query = "SELECT track_name
+                FROM Song
+                WHERE song_id=:song_id";
     try {
         $statement = $db->prepare($query);
-        // fill in the value
-        $statement->bindValue(':username', $username);
-        // execute
+        $statement->bindValue(':song_id', $song_id);
         $statement->execute();
-        $result = $statement->fetchAll();
+        $result = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
         $statement->closeCursor();
-        return $result[0]['user_id'];
+        return $result[0];
     } catch (PDOException $e) {
-        $e->getMessage();
+        echo $e->getMessage();
+        return false;
     } catch (Exception $e) {
-        $e->getMessage();
+        echo $e->getMessage();
+        return false;
     }
 }
 
+// ======================================================
+// Playlist
+// ======================================================
 function createPlaylist($username, $playlist_name){
     global $db;
     $query = "CALL createPlaylist (:user_id, :playlist_name)";
@@ -156,6 +190,94 @@ function deletePlaylist($playlist_id){
     }
 }
 
+// ======================================================
+// Playlist, Song
+// Listed_In
+// ======================================================
+function getPlaylistsWithSong($username, $song_id){
+    global $db;
+    $user_id = getUserId($username);
+    $query = "SELECT DISTINCT playlist_id
+                FROM 
+                    (SELECT * FROM Playlist WHERE user_id=:user_id) AS PlaylistsWithSong 
+                    NATURAL JOIN Listed_In
+                WHERE song_id=:song_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':user_id', $user_id);
+        $statement->bindValue(':song_id', $song_id);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}
+
+//returns if the song_id, playlist_id 
+function listedItemInPlaylisting($song_id, $playlist_id){
+    global $db;
+    $query = "SELECT * FROM Listed_In WHERE playlist_id=:playlist_id AND song_id=:song_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':playlist_id', $playlist_id);
+        $statement->bindValue(':song_id', $song_id);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return empty($result);
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}
+
+function getSongsInPlaylist($playlist_id) {
+    global $db;
+    $query = "SELECT * FROM Listed_In WHERE playlist_id=:playlist_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':playlist_id', $playlist_id);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    } catch (Exception $e) {
+        echo $e->getMessage();
+    }
+}
+
+function deleteSongFromPlaylist($playlist_id, $song_id) {
+    global $db;
+    $query = "DELETE FROM Listed_In WHERE playlist_id=:playlist_id AND song_id=:song_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':playlist_id', $playlist_id);
+        $statement->bindValue(':song_id', $song_id);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    } catch (Exception $e) {
+        echo $e->getMessage();
+    }
+}
+
+// ======================================================
+// Favorites
+// ======================================================
 function inFavorites($username, $song_id) {
     global $db;
     $user_id = getUserId($username);
@@ -246,6 +368,9 @@ function getFavorites($username){
     }
 }
 
+// ======================================================
+// access
+// ======================================================
 function get_access($username) {
     global $db;
     $user_id = getUserId($username);
@@ -257,52 +382,6 @@ function get_access($username) {
         $result = $statement->fetchAll();
         $statement->closeCursor();
         return $result;
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        return false;
-    } catch (Exception $e) {
-        echo $e->getMessage();
-        return false;
-    }
-}
-
-function getPlaylistsWithSong($username, $song_id){
-    global $db;
-    $user_id = getUserId($username);
-    $query = "SELECT DISTINCT playlist_id
-                FROM 
-                    (SELECT * FROM Playlist WHERE user_id=:user_id) AS PlaylistsWithSong 
-                    NATURAL JOIN Listed_In
-                WHERE song_id=:song_id";
-    try {
-        $statement = $db->prepare($query);
-        $statement->bindValue(':user_id', $user_id);
-        $statement->bindValue(':song_id', $song_id);
-        $statement->execute();
-        $result = $statement->fetchAll();
-        $statement->closeCursor();
-        return $result;
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        return false;
-    } catch (Exception $e) {
-        echo $e->getMessage();
-        return false;
-    }
-}
-
-function getSongName($song_id){
-    global $db;
-    $query = "SELECT track_name
-                FROM Song
-                WHERE song_id=:song_id";
-    try {
-        $statement = $db->prepare($query);
-        $statement->bindValue(':song_id', $song_id);
-        $statement->execute();
-        $result = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
-        $statement->closeCursor();
-        return $result[0];
     } catch (PDOException $e) {
         echo $e->getMessage();
         return false;
@@ -349,61 +428,5 @@ function removeSongFromPlaylist($song_id, $playlist_id){
     } catch (Exception $e) {
         echo $e->getMessage();
         return false;
-    }
-}
-
-//returns if the song_id, playlist_id 
-function listedItemInPlaylisting($song_id, $playlist_id){
-    global $db;
-    $query = "SELECT * FROM Listed_In WHERE playlist_id=:playlist_id AND song_id=:song_id";
-    try {
-        $statement = $db->prepare($query);
-        $statement->bindValue(':playlist_id', $playlist_id);
-        $statement->bindValue(':song_id', $song_id);
-        $statement->execute();
-        $result = $statement->fetchAll();
-        $statement->closeCursor();
-        return empty($result);
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        return false;
-    } catch (Exception $e) {
-        echo $e->getMessage();
-        return false;
-    }
-}
-
-function getSongsInPlaylist($playlist_id) {
-    global $db;
-    $query = "SELECT * FROM Listed_In WHERE playlist_id=:playlist_id";
-    try {
-        $statement = $db->prepare($query);
-        $statement->bindValue(':playlist_id', $playlist_id);
-        $statement->execute();
-        $result = $statement->fetchAll();
-        $statement->closeCursor();
-        return $result;
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-    } catch (Exception $e) {
-        echo $e->getMessage();
-    }
-}
-
-function deleteSongFromPlaylist($playlist_id, $song_id) {
-    global $db;
-    $query = "DELETE FROM Listed_In WHERE playlist_id=:playlist_id AND song_id=:song_id";
-    try {
-        $statement = $db->prepare($query);
-        $statement->bindValue(':playlist_id', $playlist_id);
-        $statement->bindValue(':song_id', $song_id);
-        $statement->execute();
-        $result = $statement->fetchAll();
-        $statement->closeCursor();
-        return $result;
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-    } catch (Exception $e) {
-        echo $e->getMessage();
     }
 }
