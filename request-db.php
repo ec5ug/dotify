@@ -430,3 +430,70 @@ function removeSongFromPlaylist($song_id, $playlist_id){
         return false;
     }
 }
+
+// ======================================================
+// Friend_Group
+// ======================================================
+function getGroupId($group_name) {
+    global $db;
+    $query = "SELECT friend_group_id FROM Friend_Group WHERE group_name=:group_name";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':group_name', $group_name);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result[0]['friend_group_id'];;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}
+
+function addToGroup($username, $group_name) {
+    global $db;
+    $query = "INSERT INTO Belongs_To (friend_group_id, user_id) VALUES (:friend_group_id, :user_id)";
+    $friend_group_id = getGroupId($group_name);
+    $user_id = getUserId($username);
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':friend_group_id', $friend_group_id);
+        $statement->bindValue(':user_id', $user_id); // Corrected method name
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}
+
+function createGroup($username, $group_name) {
+    global $db;
+    $query = "INSERT INTO Friend_Group (group_name, creator) VALUES (:group_name, :creator)";
+    $user_id = getUserId($username);
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':group_name', $group_name);
+        $statement->bindValue(':creator', $user_id);
+        $statement->execute();
+        $statement->closeCursor();
+
+        // After the group is created, add the creator to the Belongs_To table
+        addToGroup($username, $group_name);
+
+        return true; // Indicate success
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}
