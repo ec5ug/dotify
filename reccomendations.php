@@ -22,7 +22,15 @@ $recommended_songs_by_artists = reccomendSongsByArtists($username);
         <h2>Songs sung by artists that you have listened to</h2>
         <?php
         if (!(empty($recommended_songs_by_artists))) {
-
+            echo "<table>";
+            foreach ($recommended_songs_by_artists as $recommended_song_by_artists) {
+                echo "<tr>";
+                $song_id = $recommended_song_by_artists['song_id'];
+                $song_name = getSongName($song_id);
+                echo "<td>" . $song_name . "</td>";
+                echo "</tr>";
+            }
+            echo "</table>";
         } else {
             echo "<p>No songs were found. This could be due to a couple of reasons:</p>";
             echo "<li>You haven't favorited any songs.</li>";
