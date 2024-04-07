@@ -548,3 +548,22 @@ function retrieveUserFriendGroups($username) {
         return false;
     }
 }
+
+function removeUserFromFriendGroup($username, $friend_group_id) {
+    global $db;
+    $user_id = getUserId($username);
+    $query = "DELETE FROM Belongs_To WHERE friend_group_id=:friend_group_id AND $user_id=:user_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':friend_group_id', $friend_group_id);
+        $statement->bindValue(':user_id', $user_id);
+        $statement->execute();
+        $statement->closeCursor();
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}

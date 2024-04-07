@@ -19,6 +19,11 @@ if(isset($_POST["create_friend_group"])){
         header("Location: friend_group.php?message=friend_group_dne");
         exit();
     }
+} else if (isset($_POST["remove_from_group"])) {
+    $friend_group_id = $_POST['friend_group_id'];
+    removeUserFromFriendGroup($username, $friend_group_id);
+    header("Location: friend_group.php");
+    exit();
 }
 ?>
 
@@ -67,7 +72,12 @@ if(isset($_POST["create_friend_group"])){
             $friend_group_id = $user_friend_group['friend_group_id'];
             $friend_group_name = getGroupName($friend_group_id);
             echo "<td>" . $friend_group_name . "</td>";
-            echo "<td><button>Remove from friend group</button></td>";
+            echo "<td>";
+            echo "<form method='post'>";
+            echo "<input type='hidden' name='friend_group_id' value='" . $friend_group_id . "'>";
+            echo "<button type='submit' name='remove_from_group'>Remove from friend group</button>";
+            echo "</form>";
+            echo "</td>";
             echo "</tr>";
         }
         echo "</table>";
