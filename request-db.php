@@ -656,11 +656,9 @@ function artistsInFavoritesPlaylist($username) {
 function reccomendSongsByArtists($username) {
     global $db;
 
-    // Get the list of artists from favorites and playlists
     $artists = artistsInFavoritesPlaylist($username);
     $artist_list = resultToList($artists);
 
-    // Get the list of favorite song IDs
     $favorite_songs = getFavorites($username);
     $favorite_song_ids = array_column($favorite_songs, 'song_id');
     $favorite_song_list = implode("', '", $favorite_song_ids);
@@ -688,3 +686,7 @@ function reccomendSongsByArtists($username) {
         return false;
     }
 }
+
+// ======================================================
+// reccomend songs by valence
+// ======================================================

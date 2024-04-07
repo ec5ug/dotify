@@ -19,9 +19,15 @@ $recommended_songs_by_artists = reccomendSongsByArtists($username);
      <body>
         <?php include 'nav_bar.php'; ?>
         <h1>Reccomended Songs</h1>
-        <h2>Songs sung by artists that you have listened to</h2>
         <?php
-        if (!(empty($recommended_songs_by_artists))) {
+        $user_favorites = getFavorites($username);
+        $user_songs = getSongsInUserPlaylist($username);
+        if (empty($user_favorites) && empty($user_songs)) {
+            echo "<p>No reccomendations could be found. This could be due to a few reasons</p>";
+            echo "<li>You have extensively listed to the songs in our playlist and we don't have any new song we can reccomend to you that you haven't listened to.</li>";
+            echo "<li>You have not listened to enough songs for us to make reccomendations.</li>";
+        } else {
+            echo "<h2>Songs sung by artists that you have listened to</h2>";
             echo "<table>";
             foreach ($recommended_songs_by_artists as $recommended_song_by_artists) {
                 echo "<tr>";
@@ -31,12 +37,8 @@ $recommended_songs_by_artists = reccomendSongsByArtists($username);
                 echo "</tr>";
             }
             echo "</table>";
-        } else {
-            echo "<p>No songs were found. This could be due to a couple of reasons:</p>";
-            echo "<li>You haven't favorited any songs.</li>";
-            echo "<li>You have extensively listed to the songs in our playlist and we don't have any new song we can reccomend to you that you haven't listened to.</li>";
+            echo "<h2>Songs sung with similar energy levels</h2>";
         }
         ?>
-        <h2>Songs sung with similar energy levels</h2> 
      </body>
  </html>
