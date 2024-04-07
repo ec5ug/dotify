@@ -653,19 +653,28 @@ function artistsInFavoritesPlaylist($username) {
     return $unique_artists;
 }
 
+function getFavoritesSongsAsList($username) {
+    $favorite_songs = getFavorites($username);
+    $favorite_song_ids = array_column($favorite_songs, 'song_id');
+    $favorite_song_list = implode("', '", $favorite_song_ids);
+    return $favorite_song_list;
+}
+
+function getSongsInPlaylistAsList($username) {
+    $playlist_songs = getSongsInUserPlaylist($username);
+    $playlist_song_ids = array_column($playlist_songs, 'song_id');
+    $playlist_song_list = implode("', '", $playlist_song_ids);
+    return $playlist_song_list;
+}
+
 function reccomendSongsByArtists($username) {
     global $db;
 
     $artists = artistsInFavoritesPlaylist($username);
     $artist_list = resultToList($artists);
 
-    $favorite_songs = getFavorites($username);
-    $favorite_song_ids = array_column($favorite_songs, 'song_id');
-    $favorite_song_list = implode("', '", $favorite_song_ids);
-
-    $playlist_songs = getSongsInUserPlaylist($username);
-    $playlist_song_ids = array_column($playlist_songs, 'song_id');
-    $playlist_song_list = implode("', '", $playlist_song_ids);
+    $favorite_song_list = getFavoritesSongsAsList($username);
+    $playlist_song_list = getSongsInPlaylistAsList($username);
 
     $query = "SELECT * FROM Song NATURAL JOIN Song_Artist WHERE artist_name IN ('$artist_list') AND song_id NOT IN ('$favorite_song_list') AND song_id NOT IN ('$playlist_song_list')";
 
@@ -708,22 +717,27 @@ function reccomendSongsByEnergy($username) {
     global $db;
 
     $avg_energy = calculateAverageEnergy($username);
-    $query = "SELECT song_id, (energy - :avg_energy) AS energy_diff FROM Song WHERE (energy - :avg_energy) > 0 ORDER BY energy_diff";
+    $favorite_song_list = getFavoritesSongsAsList($username);
+    $playlist_song_list = getSongsInPlaylistAsList($username);
+    $query = "SELECT song_id, track_name, (energy - :avg_energy) AS energy_diff FROM Song 
+                WHERE (energy - :avg_energy) > 0 AND song_id NOT IN ('$favorite_song_list') AND song_id NOT IN ('$playlist_song_list')
+                ORDER BY energy_diff";
     try {
         $statement = $db->prepare($query);
         $statement->bindValue(':avg_energy', $avg_energy, PDO::PARAM_INT);
         $statement->execute();
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         $statement->closeCursor();
-        $result_length = count($result);
+        // $result_length = count($result);
     
-        if ($result_length < 10) {
-            return $result;
-        } else {
-            shuffle($result);
-            $result = array_slice($result, 0, 10);
-            return $result;
-        }
+        // if ($result_length < 10) {
+        //     return $result;
+        // } else {
+        //     shuffle($result);
+        //     $result = array_slice($result, 0, 10);
+        //     return $result;
+        // }
+        return $result;
     } catch (PDOException $e) {
         echo $e->getMessage();
         return false;
