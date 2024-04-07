@@ -672,8 +672,8 @@ function reccomendSongsByArtists($username) {
     try {
         $statement = $db->query($query);
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $statement->closeCursor();
         $result_length = count($result);
-    
         if ($result_length < 10) {
             return $result;
         } else {
@@ -690,7 +690,7 @@ function reccomendSongsByArtists($username) {
 // ======================================================
 // reccomend songs by valence
 // ======================================================
-function calculate_average_energy($username) {
+function calculateAverageEnergy($username) {
     global $db;
 
     $favorite_songs = getFavorites($username);
@@ -702,4 +702,30 @@ function calculate_average_energy($username) {
     $combined_energies = array_merge($favorite_energies, $playlist_energies);
     $average_energy = count($combined_energies) > 0 ? array_sum($combined_energies) / count($combined_energies) : 0;
     return $average_energy;
+}
+
+function reccomendSongsByEnergy($username) {
+    global $db;
+
+    $avg_energy = calculateAverageEnergy($username);
+    $query = "SELECT song_id, (energy - :avg_energy) AS energy_diff FROM Song WHERE (energy - :avg_energy) > 0 ORDER BY energy_diff";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':avg_energy', $avg_energy, PDO::PARAM_INT);
+        $statement->execute();
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $statement->closeCursor();
+        $result_length = count($result);
+    
+        if ($result_length < 10) {
+            return $result;
+        } else {
+            shuffle($result);
+            $result = array_slice($result, 0, 10);
+            return $result;
+        }
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    }
 }
