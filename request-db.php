@@ -1,5 +1,21 @@
 <?php
 // ======================================================
+// utility function
+// ======================================================
+function resultToList($results) {
+    $merged_results = [];
+    foreach ($results as $result) {
+        if (is_array($result)) {
+            $merged_results = array_merge($merged_results, $result);
+        } else {
+            $merged_results[] = $result;
+        }
+    }
+    $flattened_list = implode("', '", $merged_results);
+    return $flattened_list;
+}
+
+// ======================================================
 // accessing user information
 // ======================================================
 function getUsers() {
@@ -194,6 +210,46 @@ function deletePlaylist($playlist_id){
 // Playlist, Song
 // Listed_In
 // ======================================================
+function addSongToPlaylist($song_id, $playlist_id){
+    global $db;
+    $query = "INSERT INTO Listed_In (playlist_id, song_id) VALUES (:playlist_id, :song_id)";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':playlist_id', $playlist_id);
+        $statement->bindValue(':song_id', $song_id);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}
+
+function removeSongFromPlaylist($song_id, $playlist_id){
+    global $db;
+    $query = "DELETE FROM Listed_In WHERE playlist_id=:playlist_id AND song_id=:song_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':playlist_id', $playlist_id);
+        $statement->bindValue(':song_id', $song_id);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}
+
 function getPlaylistsWithSong($username, $song_id){
     global $db;
     $user_id = getUserId($username);
@@ -264,6 +320,24 @@ function deleteSongFromPlaylist($playlist_id, $song_id) {
         $statement = $db->prepare($query);
         $statement->bindValue(':playlist_id', $playlist_id);
         $statement->bindValue(':song_id', $song_id);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    } catch (Exception $e) {
+        echo $e->getMessage();
+    }
+}
+
+function getSongsInUserPlaylist($username) {
+    global $db;
+    $user_id = getUserId($username);
+    $query = "SELECT * FROM Playlist NATURAL JOIN Listed_In WHERE user_id=:user_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':user_id', $user_id);
         $statement->execute();
         $result = $statement->fetchAll();
         $statement->closeCursor();
@@ -378,46 +452,6 @@ function get_access($username) {
     try {
         $statement = $db->prepare($query);
         $statement->bindValue(':user_id', $user_id);
-        $statement->execute();
-        $result = $statement->fetchAll();
-        $statement->closeCursor();
-        return $result;
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        return false;
-    } catch (Exception $e) {
-        echo $e->getMessage();
-        return false;
-    }
-}
-
-function addSongToPlaylist($song_id, $playlist_id){
-    global $db;
-    $query = "INSERT INTO Listed_In (playlist_id, song_id) VALUES (:playlist_id, :song_id)";
-    try {
-        $statement = $db->prepare($query);
-        $statement->bindValue(':playlist_id', $playlist_id);
-        $statement->bindValue(':song_id', $song_id);
-        $statement->execute();
-        $result = $statement->fetchAll();
-        $statement->closeCursor();
-        return $result;
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        return false;
-    } catch (Exception $e) {
-        echo $e->getMessage();
-        return false;
-    }
-}
-
-function removeSongFromPlaylist($song_id, $playlist_id){
-    global $db;
-    $query = "DELETE FROM Listed_In WHERE playlist_id=:playlist_id AND song_id=:song_id";
-    try {
-        $statement = $db->prepare($query);
-        $statement->bindValue(':playlist_id', $playlist_id);
-        $statement->bindValue(':song_id', $song_id);
         $statement->execute();
         $result = $statement->fetchAll();
         $statement->closeCursor();
@@ -563,6 +597,88 @@ function removeUserFromFriendGroup($username, $friend_group_id) {
         echo $e->getMessage();
         return false;
     } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}
+
+// ======================================================
+// reccomend songs
+// ======================================================
+function artistsInPlaylists($username) {
+    global $db;
+    $user_id = getUserId($username);
+    $query = "SELECT DISTINCT artist_name FROM Playlist NATURAL JOIN Listed_In NATURAL JOIN Song_Artist WHERE user_id=:user_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':user_id', $user_id); // Corrected method name
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}
+
+function artistsInFavorites($username) {
+    global $db;
+    $user_id = getUserId($username);
+    $query = "SELECT DISTINCT artist_name FROM Favorites NATURAL JOIN Song_Artist WHERE user_id=:user_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':user_id', $user_id); // Corrected method name
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}
+
+function artistsInFavoritesPlaylist($username) {
+    $artistInFavorites = artistsInFavorites($username);
+    $artistsInPlaylists = artistsInPlaylists($username);
+    $combined_artists = array_merge($artistInFavorites, $artistsInPlaylists);
+    $unique_artists = array_unique($combined_artists, SORT_REGULAR);
+    return $unique_artists;
+}
+
+function reccomendSongsByArtists($username) {
+    global $db;
+
+    // Get the list of artists from favorites and playlists
+    $artists = artistsInFavoritesPlaylist($username);
+    $artist_list = resultToList($artists);
+
+    // Get the list of favorite song IDs
+    $favorite_songs = getFavorites($username);
+    $favorite_song_ids = array_column($favorite_songs, 'song_id');
+    $favorite_song_list = implode("', '", $favorite_song_ids);
+
+    $playlist_songs = getSongsInUserPlaylist($username);
+    $playlist_song_ids = array_column($playlist_songs, 'song_id');
+    $playlist_song_list = implode("', '", $playlist_song_ids);
+
+    $query = "SELECT * FROM Song NATURAL JOIN Song_Artist WHERE artist_name IN ('$artist_list') AND song_id NOT IN ('$favorite_song_list') AND song_id NOT IN ('$playlist_song_list')";
+
+    try {
+        $statement = $db->query($query);
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        // shuffle($result);
+        // $result = array_slice($result, 0, 10);
+
+        return $result;
+    } catch (PDOException $e) {
         echo $e->getMessage();
         return false;
     }
