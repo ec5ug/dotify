@@ -472,6 +472,22 @@ function getGroupId($group_name) {
     }
 }
 
+function getGroupName($friend_group_id) {
+    global $db;
+    $query = "SELECT group_name FROM Friend_Group WHERE friend_group_id=:friend_group_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':friend_group_id', $friend_group_id);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result[0]['group_name'];
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}
+
 function addToGroup($username, $group_name) {
     global $db;
     $query = "INSERT INTO Belongs_To (friend_group_id, user_id) VALUES (:friend_group_id, :user_id)";
@@ -503,11 +519,27 @@ function createGroup($username, $group_name) {
         $statement->bindValue(':creator', $user_id);
         $statement->execute();
         $statement->closeCursor();
-
-        // After the group is created, add the creator to the Belongs_To table
         addToGroup($username, $group_name);
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}
 
-        return true; // Indicate success
+function retrieveUserFriendGroups($username) {
+    global $db;
+    $user_id = getUserId($username);
+    $query = "SELECT * FROM Belongs_To WHERE user_id=:user_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':user_id', $user_id); // Corrected method name
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
     } catch (PDOException $e) {
         echo $e->getMessage();
         return false;

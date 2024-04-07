@@ -3,6 +3,7 @@ require "import.php";
 require "logged-in.php";
 
 $username = $_SESSION["username"];
+$user_friend_groups = retrieveUserFriendGroups($username);
 if(isset($_POST["create_friend_group"])){
     $friend_group_name = $_POST["friend_group_name"];
     createGroup($username, $friend_group_name);
@@ -37,27 +38,42 @@ if(isset($_POST["create_friend_group"])){
 <?php include 'nav_bar.php'; ?>
 
 <!-- Add the form for creating a friend group -->
-<div class="container">
-    <h1>Create a Friend Group</h1>
-    <form method="post">
-        <label for="friend_group_name">Enter Friend Group Name:</label><br>
-        <input type="text" id="friend_group_name" name="friend_group_name" required><br><br>
-        <button type="submit" name="create_friend_group">Create Friend Group</button>
-    </form>
-    <h1>Add Yourself To Friend Group</h1>
-    <form method="post">
-        <label>Enter Friend Group Name:</label></br>
-        <input type="text" id="friend_group_name" name="friend_group_name" required><br><br>
-        <button type="submit" name="add_to_friend_group">Add Yourself to Friend Group</button>
-    </form>
-    <?php
-        if (isset($_GET["message"])){
-            if($_GET["message"] === "friend_group_dne"){
-                echo "<p style=\"color: red\">Error: Such a friend group name does not exist.</p>";
-            }
-        }
-    ?>     
-</div>
 
+<h1>Create a Friend Group</h1>
+<form method="post">
+    <label for="friend_group_name">Enter Friend Group Name:</label><br>
+    <input type="text" id="friend_group_name" name="friend_group_name" required><br><br>
+    <button type="submit" name="create_friend_group">Create Friend Group</button>
+</form>
+<h1>Add Yourself To Friend Group</h1>
+<form method="post">
+    <label>Enter Friend Group Name:</label></br>
+    <input type="text" id="friend_group_name" name="friend_group_name" required><br><br>
+    <button type="submit" name="add_to_friend_group">Add Yourself to Friend Group</button>
+</form>
+<?php
+    if (isset($_GET["message"])){
+        if($_GET["message"] === "friend_group_dne"){
+            echo "<p style=\"color: red\">Error: Such a friend group name does not exist.</p>";
+        }
+    }
+?>
+<h1>Groups You Are In</h1>
+<?php
+    if (!empty($user_friend_groups)) {
+        echo "<table>";
+        foreach ($user_friend_groups as $user_friend_group) {
+            echo "<tr>";
+            $friend_group_id = $user_friend_group['friend_group_id'];
+            $friend_group_name = getGroupName($friend_group_id);
+            echo "<td>" . $friend_group_name . "</td>";
+            echo "<td><button>Remove from friend group</button></td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+    } else {
+        echo "<p>You aren't in any friend groups.</p>";
+    }
+?>
 </body>
 </html>
