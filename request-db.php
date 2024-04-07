@@ -434,6 +434,25 @@ function removeSongFromPlaylist($song_id, $playlist_id){
 // ======================================================
 // Friend_Group
 // ======================================================
+function groupNameExists($group_name) {
+    global $db;
+    $query = "SELECT friend_group_id FROM Friend_Group WHERE group_name=:group_name";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':group_name', $group_name);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return !(empty($result));
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}
+
 function getGroupId($group_name) {
     global $db;
     $query = "SELECT friend_group_id FROM Friend_Group WHERE group_name=:group_name";
@@ -443,7 +462,7 @@ function getGroupId($group_name) {
         $statement->execute();
         $result = $statement->fetchAll();
         $statement->closeCursor();
-        return $result[0]['friend_group_id'];;
+        return $result[0]['friend_group_id'];
     } catch (PDOException $e) {
         echo $e->getMessage();
         return false;

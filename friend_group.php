@@ -10,6 +10,14 @@ if(isset($_POST["create_friend_group"])){
     exit();
 } else if (isset($_POST["add_to_friend_group"])) {
     $friend_group_name = $_POST["friend_group_name"];
+    if (groupNameExists($friend_group_name)) {
+        addToGroup($username, $friend_group_name);
+        header("Location: friend_group.php");
+        exit();
+    } else {
+        header("Location: friend_group.php?message=friend_group_dne");
+        exit();
+    }
 }
 ?>
 
@@ -41,7 +49,14 @@ if(isset($_POST["create_friend_group"])){
         <label>Enter Friend Group Name:</label></br>
         <input type="text" id="friend_group_name" name="friend_group_name" required><br><br>
         <button type="submit" name="add_to_friend_group">Add Yourself to Friend Group</button>
-    </form>        
+    </form>
+    <?php
+        if (isset($_GET["message"])){
+            if($_GET["message"] === "friend_group_dne"){
+                echo "<p style=\"color: red\">Error: Such a friend group name does not exist.</p>";
+            }
+        }
+    ?>     
 </div>
 
 </body>
