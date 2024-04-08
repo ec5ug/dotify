@@ -192,7 +192,13 @@ function createPlaylist($username, $playlist_name){
 function getPlaylist($username) {
     global $db;
     $user_id = getUserId($username);
-    $query = "SELECT * FROM Playlist WHERE user_id=:user_id";
+    $query = "SELECT playlist_id, playlist_name, user_id
+                FROM Playlist
+                WHERE user_id = :user_id 
+                UNION
+                SELECT P.playlist_id, P.playlist_name, P.user_id
+                FROM Has_Individual_Access HIA JOIN Playlist P WHERE P.playlist_id = HIA.playlist_id
+                AND HIA.user_id = :user_id";
     try {
         $statement = $db->prepare($query);
         $statement->bindValue(':user_id', $user_id);
