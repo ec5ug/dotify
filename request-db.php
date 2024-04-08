@@ -73,6 +73,25 @@ function getUserId($username) {
     }
 }
 
+function doesUserExist($username) {
+    global $db;
+    $query = "SELECT * FROM Dotify_User WHERE username=:username";
+    try {
+        $statement = $db->prepare($query);
+        // fill in the value
+        $statement->bindValue(':username', $username);
+        // execute
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return !(empty($result));
+    } catch (PDOException $e) {
+        $e->getMessage();
+    } catch (Exception $e) {
+        $e->getMessage();
+    }
+}
+
 // ======================================================
 // login/signup
 // ======================================================
@@ -359,7 +378,7 @@ function getArtistNames($song_id) {
         $results = $statement->fetchAll();
         $statement->closeCursor();
         
-        $artistNames = array();
+        $artistNames = array(); // Array to store artist names
         
         foreach ($results as $result) {
             $artistNames[] = $result['artist_name'];
@@ -488,6 +507,9 @@ function get_access($username) {
         echo $e->getMessage();
         return false;
     }
+}
+
+function grantIndividualAccess($username, $playlist_id) {
 }
 
 // ======================================================

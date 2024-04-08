@@ -20,6 +20,17 @@ if(isset($_POST["create_playlist"])){
     deleteSongFromPlaylist($playlist_id, $song_id);
     header("Location: playlist.php");
     exit();
+} else if (isset($_POST["grant_individual_access"])) {
+    $username = $_POST['username_access'];
+    if (doesUserExist($username)) {
+        // Grant individual access logic here
+    } else {
+        session_start();
+        $_SESSION['error_message'] = "The username does not exist.";
+        $_SESSION['error_field'] = "username_access";
+        header("Location: playlist.php");
+        exit();
+    }
 }
 
 $user_playlists = getPlaylist($username);
@@ -92,41 +103,58 @@ $user_playlists = getPlaylist($username);
 
     <?php
     if (!empty($user_playlists)) {
-        echo "<table>";
         foreach ($user_playlists as $playlist) {
-            echo "<tr>";
-            echo "<td>";
-            echo $playlist['playlist_name'];
-            echo "</td>";
-            echo "<td>";
-            echo "<form method='post'>";
-            echo "<input type='hidden' name='playlist_id' value='" . $playlist['playlist_id'] . "'>";
-            echo "<button type='submit' name='delete_playlist'>Delete Playlist</button>";
-            echo "</form>";
-            echo "</td>";
-            echo "</tr>";
+            echo "<table>"; // Open table for each playlist
+                echo "<tr>
+                    <td>" . $playlist['playlist_name'] . "</td>
+                <td> 
+                    <form method='post'>
+                        <input type='hidden' name='playlist_id' value='" . $playlist['playlist_id'] . "'>
+                        <button type='submit' name='delete_playlist'>Delete Playlist</button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td colspan='2'>
+                <form method='post'>
+                    <input type='text' name='username_access' placeholder='Enter username'>
+                    <button type='submit' name='grant_individual_access'>Grant Individual Access</button>";
+                    if (isset($_SESSION['error_message']) && $_SESSION['error_field'] === 'username_access') {
+                        echo '<p>Error: ' . htmlspecialchars($_SESSION['error_message']) . '</p>';
+                        unset($_SESSION['error_message']); // Clear the error message
+                        unset($_SESSION['error_field']); // Clear the error field
+                    }
+                echo "</form>
+                </td>
+            </tr>
+            <tr>
+                <td colspan='2'>
+                    <form method = 'post'>
+                        <input type='text' name='group_access' placeholder='Enter friend group name'>
+                        <button type='submit' name='grant_group_access'>Grant Group Access</button>
+                    </form>
+                </td>
+            </tr>";
 
             // List songs under each playlist
             $songs_in_playlist = getSongsInPlaylist($playlist['playlist_id']);
-            if (!empty($songs_in_playlist)) {
-                foreach ($songs_in_playlist as $song_in_playlist) {
-                    echo "<tr>";
-                    $song_id = $song_in_playlist['song_id'];
-                    echo "<td>&nbsp;&nbsp;&nbsp;&nbsp;" . getSongName($song_id) . "</td>"; // Indentation
-                    echo "<td>";
-                    echo "<form method='post'>";
-                    echo "<input type='hidden' name='playlist_id' value='" . $playlist['playlist_id'] . "'>";
-                    echo "<input type='hidden' name='song_id' value='" . $song_in_playlist['song_id'] . "'>";
-                    echo "<button type='submit' name='delete_song_from_playlist'>Delete from Playlist</button>";
-                    echo "</form>";
-                    echo "</td>";
-                    echo "</tr>";
-                }
-                // Insert an empty row for space between playlists
-                echo "<tr><td colspan='2'>&nbsp;</td></tr>";
+            foreach ($songs_in_playlist as $song_in_playlist) {
+                echo "<tr>";
+                $song_id = $song_in_playlist['song_id'];
+                echo "<td>&nbsp;&nbsp;&nbsp;&nbsp;" . getSongName($song_id) . "</td>"; // Indentation
+                echo "<td>";
+                echo "<form method='post'>";
+                echo "<input type='hidden' name='playlist_id' value='" . $playlist['playlist_id'] . "'>";
+                echo "<input type='hidden' name='song_id' value='" . $song_in_playlist['song_id'] . "'>";
+                echo "<button type='submit' name='delete_song_from_playlist'>Delete from Playlist</button>";
+                echo "</form>";
+                echo "</td>";
+                echo "</tr>";
             }
-        }
-        echo "</table>";
+            // Insert an empty row for space between playlists
+            echo "<tr><td colspan='2'>&nbsp;</td></tr>";
+            echo "</table>"; // Close table for each playlist
+    }
     } else {
         echo "<p>No playlists found.</p>";
     }
