@@ -349,6 +349,31 @@ function getSongsInUserPlaylist($username) {
     }
 }
 
+function getArtistNames($song_id) {
+    global $db;
+    $query = "SELECT * FROM Song_Artist WHERE song_id=:song_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':song_id', $song_id);
+        $statement->execute();
+        $results = $statement->fetchAll();
+        $statement->closeCursor();
+        
+        $artistNames = array();
+        
+        foreach ($results as $result) {
+            $artistNames[] = $result['artist_name'];
+        }
+        return implode(', ', $artistNames);
+    } catch (PDOException $e) {
+        error_log("PDOException in inFavorites: " . $e->getMessage());
+        return false;
+    } catch (Exception $e) {
+        error_log("Exception in inFavorites: " . $e->getMessage());
+        return false;
+    }
+}
+
 // ======================================================
 // Favorites
 // ======================================================

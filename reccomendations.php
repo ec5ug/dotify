@@ -35,6 +35,8 @@ $reccomended_songs_by_energy = reccomendSongsByEnergy($username)
                 $song_id = $recommended_song_by_artists['song_id'];
                 $song_name = getSongName($song_id);
                 echo "<td>" . $song_name . "</td>";
+                $artist_name = getArtistNames($song_id);
+                echo "<td>" . $artist_name . "</td>";
                 echo "</tr>";
             }
             echo "</table>";
@@ -45,6 +47,8 @@ $reccomended_songs_by_energy = reccomendSongsByEnergy($username)
                 $song_id = $reccomended_song_by_energy['song_id'];
                 $song_name = getSongName($song_id);
                 echo "<td>" . $song_name . "</td>";
+                $artist_name = getArtistNames($song_id);
+                echo "<td>" . $artist_name . "</td>";
                 echo "</tr>";
             }
             echo "</table>";
