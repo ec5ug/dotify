@@ -29,8 +29,8 @@ if(isset($_POST["create_playlist"])){
         header("Location: playlist.php");
         exit();
     } else {
-        header("Location: playlist.php?message=username_dne");
-        exit();
+        $_SESSION['error_message'][$playlist_id] = "The username does not exist.";
+        $_SESSION['error_field'][$playlist_id] = "individual_access";
     }
 } else if (isset($_POST['grant_group_access'])) {
     $new_group = $_POST['group_access'];
@@ -130,8 +130,11 @@ $user_playlists = getPlaylist($username);
                     <input type='hidden' name='playlist_id' value='" . $playlist['playlist_id'] . "'>
                     <input type='text' name='username_access' placeholder='Enter username'>
                     <button type='submit' name='grant_individual_access'>Grant Individual Access</button>";
-                    if (isset($error_field) && $error_field === 'username_access') {
-                        echo '<p>Error: ' . htmlspecialchars($error_message) . '</p>';
+                    $playlist_id = $playlist['playlist_id'];
+                    if (isset($_SESSION['error_message'][$playlist_id]) && $_SESSION['error_field'][$playlist_id] === 'individual_access') {
+                        echo '<p>Error: ' . htmlspecialchars($_SESSION['error_message'][$playlist_id]) . '</p>';
+                        unset($_SESSION['error_message'][$playlist_id]);
+                        unset($_SESSION['error_field'][$playlist_id]);
                     }
                 echo "</form>
             </td>
