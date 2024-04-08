@@ -4,6 +4,7 @@ require "logged-in.php";
 
 $username = $_SESSION["username"];
 $recommended_songs_by_artists = reccomendSongsByArtists($username);
+$reccomended_songs_by_energy = reccomendSongsByEnergy($username)
 ?>
 <!DOCTYPE html>
  <html lang="en">
@@ -38,7 +39,15 @@ $recommended_songs_by_artists = reccomendSongsByArtists($username);
             }
             echo "</table>";
             echo "<h2>Songs sung with similar energy levels</h2>";
-            var_dump(reccomendSongsByEnergy($username));
+            echo "<table>";
+            foreach ($reccomended_songs_by_energy as $reccomended_song_by_energy) {
+                echo "<tr>";
+                $song_id = $reccomended_song_by_energy['song_id'];
+                $song_name = getSongName($song_id);
+                echo "<td>" . $song_name . "</td>";
+                echo "</tr>";
+            }
+            echo "</table>";
         }
         ?>
      </body>

@@ -728,16 +728,15 @@ function reccomendSongsByEnergy($username) {
         $statement->execute();
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         $statement->closeCursor();
-        // $result_length = count($result);
+        $result_length = count($result);
     
-        // if ($result_length < 10) {
-        //     return $result;
-        // } else {
-        //     shuffle($result);
-        //     $result = array_slice($result, 0, 10);
-        //     return $result;
-        // }
-        return $result;
+        if ($result_length < 10) {
+            return $result;
+        } else {
+            shuffle($result);
+            $result = array_slice($result, 0, 10);
+            return $result;
+        }
     } catch (PDOException $e) {
         echo $e->getMessage();
         return false;
