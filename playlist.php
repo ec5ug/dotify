@@ -4,6 +4,7 @@ require "import.php";
 require "logged-in.php";
 
 $username = $_SESSION["username"];
+
 if(isset($_POST["create_playlist"])){
     $playlist_name = $_POST["playlist_name"];
     createPlaylist($username, $playlist_name);
@@ -21,18 +22,24 @@ if(isset($_POST["create_playlist"])){
     header("Location: playlist.php");
     exit();
 } else if (isset($_POST["grant_individual_access"])) {
-    $username = $_POST['username_access'];
+    $new_username = $_POST['username_access'];
     $playlist_id = $_POST['playlist_id'];
-    if (doesUserExist($username)) {
-        grantIndividualAccess($username, $playlist_id);
+    if (userExists($new_username)) {
+        grantIndividualAccess($new_username, $playlist_id);
         header("Location: playlist.php");
         exit();
     } else {
-        session_start();
-        $_SESSION['error_message'] = "The username does not exist.";
-        $_SESSION['error_field'] = "username_access";
-        header("Location: playlist.php");
+        header("Location: playlist.php?message=username_dne");
         exit();
+    }
+} else if (isset($_POST['grant_group_access'])) {
+    $new_group = $_POST['group_access'];
+    $playlist_id = $_POST['playlist_id'];
+    if (groupNameExists($new_group)) {
+        // Handle group access grant
+    } else {
+        $_SESSION['error_message'][$playlist_id] = "The group name does not exist.";
+        $_SESSION['error_field'][$playlist_id] = "group_access";
     }
 }
 
@@ -118,27 +125,32 @@ $user_playlists = getPlaylist($username);
                 </td>
             </tr>
             <tr>
-                <td colspan='2'>
+            <td colspan='2'>
                 <form method='post'>
                     <input type='hidden' name='playlist_id' value='" . $playlist['playlist_id'] . "'>
                     <input type='text' name='username_access' placeholder='Enter username'>
                     <button type='submit' name='grant_individual_access'>Grant Individual Access</button>";
-                    if (isset($_SESSION['error_message']) && $_SESSION['error_field'] === 'username_access') {
-                        echo '<p>Error: ' . htmlspecialchars($_SESSION['error_message']) . '</p>';
-                        unset($_SESSION['error_message']);
-                        unset($_SESSION['error_field']);
+                    if (isset($error_field) && $error_field === 'username_access') {
+                        echo '<p>Error: ' . htmlspecialchars($error_message) . '</p>';
                     }
                 echo "</form>
-                </td>
-            </tr>
-            <tr>
-                <td colspan='2'>
-                    <form method = 'post'>
-                        <input type='text' name='group_access' placeholder='Enter friend group name'>
-                        <button type='submit' name='grant_group_access'>Grant Group Access</button>
-                    </form>
-                </td>
+            </td>
             </tr>";
+            echo "<tr>
+            <td colspan='2'>
+                <form method='post'>
+                    <input type='hidden' name='playlist_id' value='" . $playlist['playlist_id'] . "'>
+                    <input type='text' name='group_access' placeholder='Enter friend group name'>
+                    <button type='submit' name='grant_group_access'>Grant Group Access</button>";
+                    $playlist_id = $playlist['playlist_id'];
+                    if (isset($_SESSION['error_message'][$playlist_id]) && $_SESSION['error_field'][$playlist_id] === 'group_access') {
+                        echo '<p>Error: ' . htmlspecialchars($_SESSION['error_message'][$playlist_id]) . '</p>';
+                        unset($_SESSION['error_message'][$playlist_id]);
+                        unset($_SESSION['error_field'][$playlist_id]);
+                    }
+                echo "</form>
+            </td>
+        </tr>";
 
             // List songs under each playlist
             $songs_in_playlist = getSongsInPlaylist($playlist['playlist_id']);

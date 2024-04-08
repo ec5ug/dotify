@@ -73,7 +73,7 @@ function getUserId($username) {
     }
 }
 
-function doesUserExist($username) {
+function userExists($username) {
     global $db;
     $query = "SELECT * FROM Dotify_User WHERE username=:username";
     try {
