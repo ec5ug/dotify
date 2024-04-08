@@ -192,13 +192,21 @@ function createPlaylist($username, $playlist_name){
 function getPlaylist($username) {
     global $db;
     $user_id = getUserId($username);
-    $query = "SELECT playlist_id, playlist_name, user_id
+    $query = "SELECT playlist_id, playlist_name
                 FROM Playlist
                 WHERE user_id = :user_id 
                 UNION
-                SELECT P.playlist_id, P.playlist_name, P.user_id
-                FROM Has_Individual_Access HIA JOIN Playlist P WHERE P.playlist_id = HIA.playlist_id
-                AND HIA.user_id = :user_id";
+                SELECT I.playlist_id, I.playlist_name
+                FROM Has_Individual_Access HIA 
+                JOIN Playlist I ON HIA.playlist_id = I.playlist_id
+                WHERE HIA.user_id = :user_id
+                UNION
+                SELECT G.playlist_id, G.playlist_name
+                FROM Has_Group_Access HGA 
+                JOIN Playlist G ON HGA.playlist_id = G.playlist_id
+                WHERE HGA.friend_group_id IN (
+                    SELECT friend_group_id FROM Belongs_To WHERE user_id = :user_id
+                )";
     try {
         $statement = $db->prepare($query);
         $statement->bindValue(':user_id', $user_id);
@@ -207,9 +215,6 @@ function getPlaylist($username) {
         $statement->closeCursor();
         return $result;
     } catch (PDOException $e) {
-        echo $e->getMessage();
-        return false;
-    } catch (Exception $e) {
         echo $e->getMessage();
         return false;
     }
