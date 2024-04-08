@@ -36,7 +36,7 @@ if(isset($_POST["create_playlist"])){
     $new_group = $_POST['group_access'];
     $playlist_id = $_POST['playlist_id'];
     if (groupNameExists($new_group)) {
-        // Handle group access grant
+        grantGroupAccess($new_group, $playlist_id);
     } else {
         $_SESSION['error_message'][$playlist_id] = "The group name does not exist.";
         $_SESSION['error_field'][$playlist_id] = "group_access";
