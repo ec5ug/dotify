@@ -510,6 +510,22 @@ function get_access($username) {
 }
 
 function grantIndividualAccess($username, $playlist_id) {
+    global $db;
+    $user_id = getUserId($username);
+    $query = "INSERT INTO Has_Individual_Access (user_id, playlist_id) VALUES (:user_id, :playlist_id)";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':user_id', $user_id);
+        $statement->bindValue(':playlist_id', $playlist_id);
+        $statement->execute();
+        $statement->closeCursor();
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
 }
 
 // ======================================================

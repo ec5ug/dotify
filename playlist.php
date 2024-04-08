@@ -22,8 +22,11 @@ if(isset($_POST["create_playlist"])){
     exit();
 } else if (isset($_POST["grant_individual_access"])) {
     $username = $_POST['username_access'];
+    $playlist_id = $_POST['playlist_id'];
     if (doesUserExist($username)) {
-        // Grant individual access logic here
+        grantIndividualAccess($username, $playlist_id);
+        header("Location: playlist.php");
+        exit();
     } else {
         session_start();
         $_SESSION['error_message'] = "The username does not exist.";
@@ -117,12 +120,13 @@ $user_playlists = getPlaylist($username);
             <tr>
                 <td colspan='2'>
                 <form method='post'>
+                    <input type='hidden' name='playlist_id' value='" . $playlist['playlist_id'] . "'>
                     <input type='text' name='username_access' placeholder='Enter username'>
                     <button type='submit' name='grant_individual_access'>Grant Individual Access</button>";
                     if (isset($_SESSION['error_message']) && $_SESSION['error_field'] === 'username_access') {
                         echo '<p>Error: ' . htmlspecialchars($_SESSION['error_message']) . '</p>';
-                        unset($_SESSION['error_message']); // Clear the error message
-                        unset($_SESSION['error_field']); // Clear the error field
+                        unset($_SESSION['error_message']);
+                        unset($_SESSION['error_field']);
                     }
                 echo "</form>
                 </td>
