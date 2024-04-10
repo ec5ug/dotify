@@ -5,7 +5,9 @@ require "logged-in.php";
 $username = $_SESSION["username"];
 if(isset($_POST["search-submit"])){
     $str = $_POST["search"];
-    $songs_found = searchSongs($str);
+    // Set the limit to 50 if the search string is empty - statement below generated from ChatGPT
+    $limit = (!empty($str)) ? null : 50;
+    $songs_found = searchSongs($str, $limit);
 } else if (isset($_POST['favorite-create'])) {
     $song_id = $_POST["song_id"];
     addToFavorites($username, $song_id);
@@ -41,7 +43,7 @@ if(isset($_POST["search-submit"])){
     <p></p>
     <form method="post">
         <label>Search</label>
-        <input type="text" name="search" style="width: 300px;" placeholder="Search by title, artist, or release year" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search for a song by title, artist, or release year'" required>
+        <input type="text" name="search" style="width: 300px;" placeholder="Search by title, artist, or release year" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search for a song by title, artist, or release year'">
         <input type="submit" name="search-submit">
     </form>
     <style>

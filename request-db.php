@@ -119,18 +119,28 @@ function createAccount($username, $hash_password, $dob) {
 // ======================================================
 // Song
 // ======================================================
-function searchSongs($str){
+function searchSongs($str, $limit = null){
     global $db;
     $query = "SELECT * FROM Song NATURAL JOIN Song_Artist WHERE LOWER(artist_name) LIKE CONCAT('%', LOWER(:str), '%') 
     OR LOWER(track_name) LIKE CONCAT('%', LOWER(:str), '%') OR LOWER(released_year) LIKE CONCAT('%', LOWER(:str), '%')";
     //Case-insensitive + "contains" match (search "Eve" should match with "Eve" "Evening" "even", etc.)
+    if ($limit !== null) {
+        $query .= " LIMIT :limit";
+    }
     try {
         $statement = $db->prepare($query);
         // fill in the value
         $statement->bindValue(':str', $str);
+        if ($limit !== null) {
+            $statement->bindValue(':limit', $limit, PDO::PARAM_INT);
+        }
         // execute
         $statement->execute();
         $result = $statement->fetchAll();
+        if ($limit !== null) {
+            shuffle($result);
+            $result = array_slice($result, 0, 50);
+        }
         $statement->closeCursor();
         return $result;
     } catch (PDOException $e) {
@@ -230,7 +240,7 @@ function getPlaylist($username) {
 function deletePlaylist($playlist_id){
     global $db;
     $query = "DELETE FROM Playlist WHERE playlist_id=:playlist_id";
-    try {        
+    try {
         $statement = $db->prepare($query);
         $statement->bindValue(':playlist_id', $playlist_id);
         $statement->execute();
@@ -395,9 +405,9 @@ function getArtistNames($song_id) {
         $statement->execute();
         $results = $statement->fetchAll();
         $statement->closeCursor();
-        
+
         $artistNames = array(); // Array to store artist names
-        
+
         foreach ($results as $result) {
             $artistNames[] = $result['artist_name'];
         }
@@ -804,7 +814,7 @@ function calculateAverageEnergy($username) {
 
     $favorite_songs = getFavorites($username);
     $playlist_songs = getSongsInUserPlaylist($username);
-    
+
     $favorite_energies = array_column($favorite_songs, 'energy');
     $playlist_energies = array_column($playlist_songs, 'energy');
 
@@ -829,7 +839,7 @@ function reccomendSongsByEnergy($username) {
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         $statement->closeCursor();
         $result_length = count($result);
-    
+
         if ($result_length < 10) {
             return $result;
         } else {
