@@ -9,6 +9,10 @@ if (isset($_POST['favorite-remove'])) {
     header('Location: ' . $_SERVER['REQUEST_URI']);
     exit();
 }
+else if (isset($_POST['add-playlist'])){
+    $song_id = $_POST["song_id"];
+    header("Location: addsong.php?song=$song_id");
+}
 ?>
 
 <!DOCTYPE html>
@@ -22,8 +26,53 @@ if (isset($_POST['favorite-remove'])) {
     <meta name="keywords" content="">
     <link rel="stylesheet" href="styles/main.css">
     <title>Dotify</title>
+
 </head>
 <body>
+    <style>
+        /* Styling generated from ChatGPT */
+        /* Tooltip container */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Tooltip text */
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        /* Tooltip arrow */
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+
+        /* Show the tooltip text when hovering over the tooltip container */
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
 <header class="container">
     <?php include 'nav_bar.php'; ?>
     <h1>Favorites</h1>
@@ -71,6 +120,17 @@ if (!empty($found_favorites)) {
             } else {
                 echo "<input type='hidden' name='song_id' value='" . $found_favorite['song_id'] . "'>";
                 echo "<button type='submit' name='favorite-create'>Add to Favorites</button>";
+            }
+            echo "</td>";
+            echo "<td>";
+            if (getPlaylist($username)){
+                echo "<button type='submit' name='add-playlist'>Add to Playlist</button>";
+            }
+            else{
+                echo "<div class='tooltip'>";
+                echo "<button type='button' disabled style='color: gray; cursor: not-allowed;'>Add to Playlist</button> ";
+                echo "<span class='tooltiptext'>You must create at least one playlist first!</span>";
+                echo "</div>";
             }
             echo "</form>";
             echo "</td>";
