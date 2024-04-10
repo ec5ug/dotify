@@ -35,8 +35,8 @@
         <li><a href="./search.php">Find a Song</a></li>
         <li><a href="./favorites.php">Favorites</a></li>
         <li><a href="./playlist.php">Playlists</a></li>
-        <li><a href=#>Reccomendations</a></li>
-        <li><a href=#>Your Groups</a></li>
+        <li><a href='./reccomendations.php'>Reccomendations</a></li>
+        <li><a href='./friend_group.php'>Your Groups</a></li>
         <li><a href="./logout.php">Logout</a></li>
     </ul>
 </nav>
