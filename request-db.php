@@ -322,6 +322,31 @@ function getPlaylistsWithSong($username, $song_id){
     }
 }
 
+function getPlaylistsWithSongName($username, $song_id){
+    global $db;
+    $user_id = getUserId($username);
+    $query = "SELECT DISTINCT playlist_name
+                FROM 
+                    (SELECT * FROM Playlist WHERE user_id=:user_id) AS PlaylistsWithSong 
+                    NATURAL JOIN Listed_In
+                WHERE song_id=:song_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':user_id', $user_id);
+        $statement->bindValue(':song_id', $song_id);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        return false;
+    }
+}
+
 //returns if the song_id, playlist_id 
 function listedItemInPlaylisting($song_id, $playlist_id){
     global $db;
@@ -385,6 +410,23 @@ function getSongsInUserPlaylist($username) {
     try {
         $statement = $db->prepare($query);
         $statement->bindValue(':user_id', $user_id);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    } catch (Exception $e) {
+        echo $e->getMessage();
+    }
+}
+
+function getPlaylistName($playlist_id) {
+    global $db;
+    $query = "SELECT DISTINCT playlist_name FROM Playlist WHERE playlist_id=:playlist_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':playlist_id', $playlist_id);
         $statement->execute();
         $result = $statement->fetchAll();
         $statement->closeCursor();

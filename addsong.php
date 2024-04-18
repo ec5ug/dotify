@@ -67,6 +67,26 @@ require "logged-in.php";
                 }
                 echo "<br>";
                 echo "<button type='submit' name='update-playlist'>Update Playlists</button>";
+            echo "<br>";
+            echo "<br>";
+            ?>
+            <h3>This song is already in these playlists:</h3>
+            <?php
+            //List playlists that the song is already in here
+            $playlists_with_song = getPlaylistsWithSongName($username, $song_id);
+            if (!empty($playlists_with_song)) {
+                // Loop through playlists and display their names
+                #var_dump($playlists_with_song);
+                foreach ($playlists_with_song as $playlist) {
+                    // Get the playlist name using the playlist_id
+                   # var_dump($playlist);
+                    echo $playlist['playlist_name'];
+                    echo "<br>";
+                }
+            } else {
+                // Display message if the song is not in any playlists
+                echo "<p>This song is not in any playlists.</p>";
+            }
             ?>
         </header>
      </body>
