@@ -37,6 +37,7 @@
         <li><a href="./playlist.php">Playlists</a></li>
         <li><a href='./reccomendations.php'>Reccomendations</a></li>
         <li><a href='./friend_group.php'>Your Groups</a></li>
+        <li><a href="./addtosongdatabase.php">Add to Song Database (ADMIN)</a></li>
         <li><a href="./logout.php">Logout</a></li>
     </ul>
 </nav>
