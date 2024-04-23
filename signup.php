@@ -37,8 +37,6 @@ require("import.php");
                 <input id="password" name="verify_password" required="" type="password" /><br>
                 <label for="date">Birth Date:</label>
                 <input type='text' id='dob' name='dob' placeholder='Format: yyyy-mm-dd' pattern="\d{4}-d{1, 2}-\d{1,2}" /><br>
-                <input type="checkbox" id="adminCheckbox" name="adminCheckbox">
-                <label for="adminCheckbox">Sign up as admin</label><br>
                 <input name="signup" type="submit" value="Signup" />
             </form>
             <br>
