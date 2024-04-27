@@ -36,9 +36,10 @@ if(isset($_POST["search-submit"])){
     <link rel="stylesheet" href="styles/main.css">
     <title>Dotify</title>
 </head>
-<body>
-<header class="container">
-    <?php include 'nav_bar.php'; ?>
+<body class="mint">
+<?php include 'nav_bar.php'; ?>
+<div class="container">
+<header>
     <h1>Search for a Song</h1>
     <p></p>
     <form method="post">
@@ -90,11 +91,12 @@ if(isset($_POST["search-submit"])){
             opacity: 1;
         }
     </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </header>
 
 <?php
+echo "<div class='container'>";
 if (!empty($songs_found)) {
-    echo "<div class='container'>";
     echo "<h3>Songs Found</h3>";
     echo "<table>";
     echo "<thead>";
@@ -129,14 +131,14 @@ if (!empty($songs_found)) {
             echo "<form method='post'>";
             echo "<input type='hidden' name='song_id' value='" . $song_found['song_id'] . "'>";
             if (inFavorites($username, $song_found['song_id'])) {
-                echo "<button type='submit' name='favorite-remove'>Remove from Favorites</button>";
+                echo "<button type='submit' name='favorite-remove' class='btn btn-danger'>Remove from Favorites</button>";
             } else {
-                echo "<button type='submit' name='favorite-create'>Add to Favorites</button>";
+                echo "<button type='submit' name='favorite-create' class='btn btn-success'>Add to Favorites</button>";
             }
             echo "</td>";
             echo "<td>";
             if (getPlaylist($username)){
-                echo "<button type='submit' name='add-playlist'>Add to Playlist</button>";
+                echo "<button type='submit' name='add-playlist' class='btn btn-secondary'>Add to Playlist</button>";
             }
             else{
                 echo "<div class='tooltip'>";
@@ -152,11 +154,11 @@ if (!empty($songs_found)) {
         }
     }
     echo "</table>";
-    echo "</div>";
 } else if (isset($_POST["search-submit"]) && !empty($_POST["search"])) {
-    echo "<p>No songs found.</p>";
+    echo "<p style='color: #c00; font-weight: bold'>No songs found.</p>";
 }
+echo "</div>";
 ?>
-
+</div>
 </body>
 </html>

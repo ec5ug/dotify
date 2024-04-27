@@ -16,10 +16,12 @@ $reccomended_songs_by_energy = reccomendSongsByEnergy($username)
          <meta name="keywords" content="">
 
          <link rel="stylesheet" href="styles/main.css">
+         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
      </head>  
-     <body>
+     <body class="mint">
         <?php include 'nav_bar.php'; ?>
-        <h1>Reccomended Songs</h1>
+        <div class="container">
+        <h1>Recommended Songs</h1>
         <?php
         $user_favorites = getFavorites($username);
         $user_songs = getSongsInUserPlaylist($username);
@@ -28,7 +30,7 @@ $reccomended_songs_by_energy = reccomendSongsByEnergy($username)
             echo "<li>You have extensively listed to the songs in our playlist and we don't have any new song we can reccomend to you that you haven't listened to.</li>";
             echo "<li>You have not listened to enough songs for us to make reccomendations.</li>";
         } else {
-            echo "<h2>Songs sung by artists that you have listened to</h2>";
+            echo "<h3>Songs sung by artists that you have listened to</h3>";
             echo "<table>";
             foreach ($recommended_songs_by_artists as $recommended_song_by_artists) {
                 echo "<tr>";
@@ -40,7 +42,8 @@ $reccomended_songs_by_energy = reccomendSongsByEnergy($username)
                 echo "</tr>";
             }
             echo "</table>";
-            echo "<h2>Songs sung with similar energy levels</h2>";
+            echo "<br>";
+            echo "<h3>Songs sung with similar energy levels</h3>";
             echo "<table>";
             foreach ($reccomended_songs_by_energy as $reccomended_song_by_energy) {
                 echo "<tr>";
@@ -54,5 +57,6 @@ $reccomended_songs_by_energy = reccomendSongsByEnergy($username)
             echo "</table>";
         }
         ?>
+        </div>
      </body>
  </html>

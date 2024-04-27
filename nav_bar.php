@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
         nav ul {
             list-style-type: none;
@@ -23,19 +24,20 @@
         }
 
         nav ul li a:hover {
-            background-color: #98C1D9;
+            background-color: #226655;
+            color: white;
         }
     </style>
 </head>
 <body>
 
-<nav>
+<nav class="top-nav">
     <ul>
         <li><a href="./welcome.php">Home</a></li>
         <li><a href="./search.php">Find a Song</a></li>
         <li><a href="./favorites.php">Favorites</a></li>
         <li><a href="./playlist.php">Playlists</a></li>
-        <li><a href='./reccomendations.php'>Reccomendations</a></li>
+        <li><a href='./reccomendations.php'>Recommendations</a></li>
         <li><a href='./friend_group.php'>Your Groups</a></li>
         <li><a href="./logout.php">Logout</a></li>
     </ul>

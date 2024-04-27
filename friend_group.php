@@ -38,23 +38,25 @@ if(isset($_POST["create_friend_group"])){
     <meta name="keywords" content="">
 
     <link rel="stylesheet" href="styles/main.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
-<body>
+<body class="mint">
 <?php include 'nav_bar.php'; ?>
 
 <!-- Add the form for creating a friend group -->
-
-<h1>Create a Friend Group</h1>
-<form method="post">
+<div class="center">
+<h2>Create a Friend Group</h2>
+<form method="post" class="formBox">
     <label for="friend_group_name">Enter Friend Group Name:</label><br>
     <input type="text" id="friend_group_name" name="friend_group_name" required><br><br>
-    <button type="submit" name="create_friend_group">Create Friend Group</button>
+    <button type="submit" name="create_friend_group" class="btn btn-light">Create Friend Group</button>
 </form>
-<h1>Add Yourself To Friend Group</h1>
-<form method="post">
+<br>
+<h2>Add Yourself To Friend Group</h2>
+<form method="post" class="formBox">
     <label>Enter Friend Group Name:</label></br>
     <input type="text" id="friend_group_name" name="friend_group_name" required><br><br>
-    <button type="submit" name="add_to_friend_group">Add Yourself to Friend Group</button>
+    <button type="submit" name="add_to_friend_group" class="btn btn-success">Add Yourself to Friend Group</button>
 </form>
 <?php
     if (isset($_GET["message"])){
@@ -63,7 +65,8 @@ if(isset($_POST["create_friend_group"])){
         }
     }
 ?>
-<h1>Groups You Are In</h1>
+<br>
+<h2>Groups You Are In</h2>
 <?php
     if (!empty($user_friend_groups)) {
         echo "<table>";
@@ -85,5 +88,6 @@ if(isset($_POST["create_friend_group"])){
         echo "<p>You aren't in any friend groups.</p>";
     }
 ?>
+</div>
 </body>
 </html>

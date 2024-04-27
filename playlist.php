@@ -54,6 +54,7 @@ $user_playlists = getPlaylist($username);
     <meta name="viewport" content="width=device-width, initial-scale=1"> 
 
     <link rel="stylesheet" href="styles/main.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
 .dropdown {
             position: relative;
@@ -96,9 +97,9 @@ $user_playlists = getPlaylist($username);
     </style>
 </head>
 
-<body>
+<body class="mint">
     <?php include 'nav_bar.php'; ?>
-    
+    <div class="container">
     <div class="dropdown">
         <button onclick=openForm()>Create Playlist</button>
         <div class="dropdown-content" id="dropdown-content">
@@ -178,7 +179,7 @@ $user_playlists = getPlaylist($username);
         echo "<p>No playlists found.</p>";
     }
     ?>
-
+    </div>
     <script>
         function openForm() {
             document.getElementById("dropdown-content").style.display = "block";
