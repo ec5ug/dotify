@@ -20,8 +20,9 @@ require "logged-in.php";
      <body class="mint">
         <?php include 'nav_bar.php'; ?>
         <header class="container">
-            <h1>Dotify</h1>
-            <p>Welcome to Dotify, <?= $_SESSION["username"] ?>!</p>
+            <p style="font-size: 55px; text-align: center;"><b>Welcome to Dotify, <?= $_SESSION["username"] ?>!</b></p>
+            <p style="font-size: 55px; text-align: center;"><i>Dotify is your one stop shop for finding songs, creating playlists, and sharing them with friends!</i></p>
+            <p style="font-size: 55px; text-align:">Click on one of the tabs above to get started!</p>
         </header>
      </body>
  </html>

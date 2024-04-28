@@ -33,6 +33,7 @@
 
 <nav class="top-nav">
     <ul>
+        <li><p style="font-weight: bold; color: white; float: left;font-size: 22.5px;">Dotify</p></li>
         <li><a href="./welcome.php">Home</a></li>
         <li><a href="./search.php">Find a Song</a></li>
         <li><a href="./favorites.php">Favorites</a></li>
