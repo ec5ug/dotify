@@ -97,7 +97,7 @@ if(isset($_POST["search-submit"])){
 <?php
 echo "<div class='container'>";
 if (!empty($songs_found)) {
-    echo "<h3>Songs Found</h3>";
+    echo "<h3 style='margin-top: 15px'>Songs Found</h3>";
     echo "<table>";
     echo "<thead>";
     echo "<tr style=\"background-color:#B0B0B0\">";
