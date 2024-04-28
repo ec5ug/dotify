@@ -55,9 +55,9 @@ require "logged-in.php";
      <body class="mint">
         <?php include 'nav_bar.php'; ?>
         <header class="container">
-            <h1>Add <?=$track_name?> to Your Playlists</h1>
+            <h1 class="center">Add <?=$track_name?> to Your Playlists</h1>
             <?php
-                echo "<form method='post' action=''>";
+                echo "<form method='post' action='' class='formBox'>";
                 echo "<input type='hidden' name='song_id' value='$song_id'>\n";
                 foreach ($has_song as $playlist_id => $playlist_arr){
                     $playlist_name = $playlist_arr["playlist_name"];
@@ -71,7 +71,7 @@ require "logged-in.php";
             echo "<br>";
             echo "<br>";
             ?>
-            <h3>This song is already in these playlists:</h3>
+            <h3 class='center'>This song is already in these playlists:</h3>
             <?php
             //List playlists that the song is already in here
             $playlists_with_song = getPlaylistsWithSongName($username, $song_id);
@@ -81,8 +81,9 @@ require "logged-in.php";
                 foreach ($playlists_with_song as $playlist) {
                     // Get the playlist name using the playlist_id
                    # var_dump($playlist);
+                    echo "<p style='font-weight:bold; margin-bottom: 0px' class='center'>";
                     echo $playlist['playlist_name'];
-                    echo "<br>";
+                    echo "</p>";
                 }
             } else {
                 // Display message if the song is not in any playlists

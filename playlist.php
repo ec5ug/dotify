@@ -133,7 +133,7 @@ $user_playlists = getPlaylist($username);
                     <button type='submit' name='grant_individual_access' class='btn btn-primary'>Grant Individual Access</button>";
                     $playlist_id = $playlist['playlist_id'];
                     if (isset($_SESSION['error_message'][$playlist_id]) && $_SESSION['error_field'][$playlist_id] === 'individual_access') {
-                        echo '<p>Error: ' . htmlspecialchars($_SESSION['error_message'][$playlist_id]) . '</p>';
+                        echo '<p class="errorMessage">Error: ' . htmlspecialchars($_SESSION['error_message'][$playlist_id]) . '</p>';
                         unset($_SESSION['error_message'][$playlist_id]);
                         unset($_SESSION['error_field'][$playlist_id]);
                     }
@@ -146,7 +146,7 @@ $user_playlists = getPlaylist($username);
                     <button type='submit' name='grant_group_access' class='btn btn-secondary'>Grant Group Access</button>";
                     $playlist_id = $playlist['playlist_id'];
                     if (isset($_SESSION['error_message'][$playlist_id]) && $_SESSION['error_field'][$playlist_id] === 'group_access') {
-                        echo '<p>Error: ' . htmlspecialchars($_SESSION['error_message'][$playlist_id]) . '</p>';
+                        echo '<p class="errorMessage">Error: ' . htmlspecialchars($_SESSION['error_message'][$playlist_id]) . '</p>';
                         unset($_SESSION['error_message'][$playlist_id]);
                         unset($_SESSION['error_field'][$playlist_id]);
                     }

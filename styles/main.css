@@ -7,6 +7,9 @@
     *
     * https://www.w3schools.com/howto/howto_css_table_center.asp
     * to help center a table
+    *
+    * https://www.w3schools.com/css/css_table.asp
+    * to help format borders around table
 **/
 .center {
     text-align: center;
@@ -62,6 +65,8 @@ tr:nth-child(odd) {
 
 .playlistDisplay {
     margin-bottom: 50px;
+    border: 8px solid;
+    border-color: #6cb;
 }
 .playlistDisplay tr:nth-child(odd) {
     background-color: #afe;
@@ -69,10 +74,14 @@ tr:nth-child(odd) {
 .playlistDisplay tr:nth-child(even) {
     background-color: #8ed;
 }
-.playlistDisplay tr:first-child {
+.playlistDisplay tr:first-child, .playlistDisplay tr:nth-child(2){
     background-color: #6cb;
 }
-
 .playlistDisplay tr:nth-child(2) {
-    background-color: #6cb;
+    height: 50px;
+}
+
+.errorMessage {
+    font-weight: bold;
+    color: rgb(193, 0, 0);
 }

@@ -117,7 +117,7 @@ if (!empty($found_favorites)) {
             echo "<form method='post'>";
             if (inFavorites($username, $found_favorite['song_id'])) {
                 echo "<input type='hidden' name='song_id' value='" . $found_favorite['song_id'] . "'>";
-                echo "<button type='submit' name='favorite-remove'>Remove from Favorites</button>";
+                echo "<button type='submit' name='favorite-remove' class='btn btn-danger'>Remove from Favorites</button>";
             } else {
                 echo "<input type='hidden' name='song_id' value='" . $found_favorite['song_id'] . "'>";
                 echo "<button type='submit' name='favorite-create'>Add to Favorites</button>";
@@ -125,7 +125,7 @@ if (!empty($found_favorites)) {
             echo "</td>";
             echo "<td>";
             if (getPlaylist($username)){
-                echo "<button type='submit' name='add-playlist'>Add to Playlist</button>";
+                echo "<button type='submit' name='add-playlist' class='btn btn-secondary'>Add to Playlist</button>";
             }
             else{
                 echo "<div class='tooltip'>";
