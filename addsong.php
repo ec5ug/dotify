@@ -67,7 +67,7 @@ require "logged-in.php";
                     }
                 }
                 echo "<br>";
-                echo "<button type='submit' name='update-playlist'>Update Playlists</button>";
+                echo "<button type='submit' name='update-playlist' class='btn btn-secondary'>Update Playlists</button>";
             echo "<br>";
             echo "<br>";
             ?>

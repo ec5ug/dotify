@@ -17,15 +17,15 @@
         }
 
         nav ul li a {
-            color: #25171A;
+            color: white;
             text-decoration: none;
             padding: 5px 10px;
             border-radius: 5px;
         }
 
         nav ul li a:hover {
-            background-color: #226655;
-            color: white;
+            background-color: #6cb;
+            color: black;
         }
     </style>
 </head>

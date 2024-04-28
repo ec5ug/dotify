@@ -143,7 +143,7 @@ $user_playlists = getPlaylist($username);
                 <form method='post'>
                     <input type='hidden' name='playlist_id' value='" . $playlist['playlist_id'] . "'>
                     <input type='text' name='group_access' placeholder='Enter friend group name'>
-                    <button type='submit' name='grant_group_access' class='btn btn-info'>Grant Group Access</button>";
+                    <button type='submit' name='grant_group_access' class='btn btn-secondary'>Grant Group Access</button>";
                     $playlist_id = $playlist['playlist_id'];
                     if (isset($_SESSION['error_message'][$playlist_id]) && $_SESSION['error_field'][$playlist_id] === 'group_access') {
                         echo '<p>Error: ' . htmlspecialchars($_SESSION['error_message'][$playlist_id]) . '</p>';
@@ -164,7 +164,7 @@ $user_playlists = getPlaylist($username);
                 echo "<form method='post'>";
                 echo "<input type='hidden' name='playlist_id' value='" . $playlist['playlist_id'] . "'>";
                 echo "<input type='hidden' name='song_id' value='" . $song_in_playlist['song_id'] . "'>";
-                echo "<button type='submit' name='delete_song_from_playlist' class='btn btn-warning'>Delete from Playlist</button>";
+                echo "<button type='submit' name='delete_song_from_playlist' class='btn btn-dark'>Delete from Playlist</button>";
                 echo "</form>";
                 echo "</td>";
                 echo "</tr>";
