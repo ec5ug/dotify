@@ -54,7 +54,7 @@ require "logged-in.php";
      </head>  
      <body class="mint">
         <?php include 'nav_bar.php'; ?>
-        <header>
+        <header class="container">
             <h1>Add <?=$track_name?> to Your Playlists</h1>
             <?php
                 echo "<form method='post' action=''>";

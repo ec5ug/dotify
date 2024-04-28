@@ -58,3 +58,20 @@ tr:nth-child(odd) {
 .friendGroup tr:nth-child(even) {
     background-color: #ddd;
 }
+
+.playlistDisplay {
+    margin-bottom: 50px;
+}
+.playlistDisplay tr:nth-child(odd) {
+    background-color: #bbb;
+}
+.playlistDisplay tr:nth-child(even) {
+    background-color: #ddd;
+}
+.playlistDisplay tr:first-child {
+    background-color: #6cb;
+}
+
+.playlistDisplay tr:nth-child(2) {
+    background-color: #6cb;
+}
