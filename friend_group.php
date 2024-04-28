@@ -69,7 +69,8 @@ if(isset($_POST["create_friend_group"])){
 <h2>Groups You Are In</h2>
 <?php
     if (!empty($user_friend_groups)) {
-        echo "<table>";
+        echo "<div class='container'>";
+        echo "<table class='friendGroup'>";
         foreach ($user_friend_groups as $user_friend_group) {
             echo "<tr>";
             $friend_group_id = $user_friend_group['friend_group_id'];
@@ -78,12 +79,13 @@ if(isset($_POST["create_friend_group"])){
             echo "<td>";
             echo "<form method='post'>";
             echo "<input type='hidden' name='friend_group_id' value='" . $friend_group_id . "'>";
-            echo "<button type='submit' name='remove_from_group'>Remove from friend group</button>";
+            echo "<button type='submit' name='remove_from_group' class='btn btn-danger'>Remove From Friend Group</button>";
             echo "</form>";
             echo "</td>";
             echo "</tr>";
         }
         echo "</table>";
+        echo "</div>";
     } else {
         echo "<p>You aren't in any friend groups.</p>";
     }

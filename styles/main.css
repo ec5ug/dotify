@@ -4,6 +4,9 @@
 
     * https://www.w3.org/Style/Examples/007/evenodd.en.html
     * style even and odd rows in table
+    *
+    * https://www.w3schools.com/howto/howto_css_table_center.asp
+    * to help center a table
 **/
 .center {
     text-align: center;
@@ -41,4 +44,17 @@ td {
 }
 tr:nth-child(odd) {
     background-color: #afe;
+}
+
+.friendGroup {
+    margin-left: 30%;
+    margin-right: 30%;
+    width: 40%;
+    padding: 5px;
+}
+.friendGroup tr:nth-child(odd) {
+    background-color: #bbb;
+}
+.friendGroup tr:nth-child(even) {
+    background-color: #ddd;
 }
